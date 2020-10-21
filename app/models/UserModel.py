@@ -1,3 +1,5 @@
+from marshmallow import Schema, fields, post_load, validate
+
 from app.database import db
 
 
@@ -5,7 +7,7 @@ class UserModel(db.Model):
     """
         Docs ...
     """
-    __tablename__ = "users"
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True)
     password = db.Column(db.String(32))
@@ -25,3 +27,15 @@ class UserModel(db.Model):
     @classmethod
     def find_by_id(cls, idx):
         return cls.query.filter_by(id=idx).first()
+
+
+class UserSchema(Schema):
+    username = fields.Str(required=True, validate=validate.Length(max=32))
+    password = fields.Str(required=True, validate=validate.Length(max=32))
+
+    @post_load
+    def make_user(self, data, **kwargs):
+        return UserModel(**data)
+
+
+user_schema = UserSchema()
