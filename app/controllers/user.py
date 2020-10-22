@@ -1,3 +1,4 @@
+import logging
 from flask import request, jsonify
 from marshmallow import ValidationError
 
@@ -40,14 +41,14 @@ def login():
             response = {
                 'status': 'success',
                 'message': 'Successfully logged in.',
-                'jwt_token': jwt_token
+                'jwt_token': jwt_token.decode()
             }
             return jsonify(response), 200
-
     except Exception as e:
+        logging.exception("Exception")
         response = {
             'status': 'fail',
-            'message': 'Wrong username or password.'
+            'message': 'Wrong username or password. Please try again.'
         }
         return jsonify(response), 400
 

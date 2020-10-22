@@ -7,7 +7,7 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@localhost/catalog'
-    SECRET_KEY = 'develop bla bla bla'      # todo: how to generate key?
+    SECRET_KEY = 'key'      # todo: how to generate key?
 
 
 class TestingConfig(Config):
