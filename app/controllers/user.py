@@ -1,4 +1,5 @@
 import logging
+
 from flask import request, jsonify
 from marshmallow import ValidationError
 

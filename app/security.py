@@ -1,8 +1,9 @@
-from functools import wraps
-from flask import jsonify, request
 import jwt
 import logging
 import datetime
+from functools import wraps
+
+from flask import jsonify, request
 
 
 def encode_jwt(user_id):
