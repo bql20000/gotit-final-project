@@ -20,3 +20,34 @@ def register():
     except ValidationError as err:
         return jsonify(err.messages), 400
 
+
+def login():
+    data = request.get_json()
+    try:
+        user = UserModel.query.filter_by(
+            username=data.get('username'),
+            password=data.get('password')
+        ).one()
+
+        jwt_token = UserModel.encode_jwt(user.id)
+        if isinstance(jwt_token, Exception):
+            response = {
+                'status': 'fail',
+                'message': 'Server error.'
+            }
+            return jsonify(response), 500
+        else:
+            response = {
+                'status': 'success',
+                'message': 'Successfully logged in.',
+                'jwt_token': jwt_token
+            }
+            return jsonify(response), 200
+
+    except Exception as e:
+        response = {
+            'status': 'fail',
+            'message': 'Wrong username or password.'
+        }
+        return jsonify(response), 400
+

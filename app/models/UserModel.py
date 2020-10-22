@@ -1,3 +1,5 @@
+import jwt
+import datetime
 from marshmallow import Schema, fields, post_load, validate
 
 from app.database import db
@@ -27,6 +29,41 @@ class UserModel(db.Model):
     @classmethod
     def find_by_id(cls, idx):
         return cls.query.filter_by(id=idx).first()
+
+    def encode_jwt(self, user_id):
+        """
+        Generates JWT
+        :param: user_id
+        :return: string
+        """
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=30),
+                'iat': datetime.datetime.utcnow(),
+                'sub': user_id
+            }
+            return jwt.encode(
+                payload,
+                app.config.get('SECRET_KEY'),
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
+
+    @staticmethod
+    def decode_jwt(token):
+        """
+        Decodes JWT
+        :param token:
+        :return: integer|string
+        """
+        try:
+            payload = jwt.decode(token, app.config.get('SECRET_KEY'))
+            return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
 
 
 class UserSchema(Schema):

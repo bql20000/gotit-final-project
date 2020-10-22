@@ -18,5 +18,6 @@ def create_app():
     db.init_app(app)
 
     app.add_url_rule('/register', view_func=user.register, methods=['POST'])
+    app.add_url_rule('/login', view_func=user.login, methods=['POST'])
 
     return app
