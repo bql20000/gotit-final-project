@@ -4,6 +4,7 @@ from marshmallow import ValidationError
 
 from app.models.UserModel import UserModel, user_schema
 from app.database import db
+from app.security import encode_jwt
 
 
 def register():
@@ -30,7 +31,7 @@ def login():
             password=data.get('password')
         ).one()
 
-        jwt_token = UserModel.encode_jwt(user.id)
+        jwt_token = encode_jwt(user.id)
         if isinstance(jwt_token, Exception):
             response = {
                 'status': 'fail',

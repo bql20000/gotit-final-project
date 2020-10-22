@@ -1,7 +1,7 @@
 from flask import Flask
 
 from app.models.UserModel import UserModel
-from app.controllers import user
+from app.controllers import user, item
 from app.database import db
 
 
@@ -19,5 +19,7 @@ def create_app():
 
     app.add_url_rule('/register', view_func=user.register, methods=['POST'])
     app.add_url_rule('/login', view_func=user.login, methods=['POST'])
+
+    app.add_url_rule('/', view_func=item.get_item, methods=['GET'])
 
     return app
