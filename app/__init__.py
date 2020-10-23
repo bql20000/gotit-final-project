@@ -2,7 +2,7 @@ from flask import Flask
 
 from app.models.UserModel import UserModel
 from app.controllers import user, item
-from app.database import db
+from app.extensions import db
 
 
 def create_app():

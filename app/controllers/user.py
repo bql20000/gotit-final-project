@@ -4,7 +4,7 @@ from flask import request, jsonify
 from marshmallow import ValidationError
 
 from app.models.UserModel import UserModel, user_schema
-from app.database import db
+from app.extensions import db
 from app.security import encode_jwt
 
 

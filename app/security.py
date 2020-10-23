@@ -3,7 +3,7 @@ import logging
 import datetime
 from functools import wraps
 
-from flask import jsonify, request
+from flask import jsonify, request, current_app
 
 
 def encode_jwt(user_id):
@@ -20,8 +20,7 @@ def encode_jwt(user_id):
         }
         return jwt.encode(
             payload,
-            # app.config.get('SECRET_KEY'),  # todo: fix
-            'key',
+            current_app.config.get('SECRET_KEY'),
             algorithm='HS256'
         )
     except Exception as e:
@@ -35,10 +34,8 @@ def requires_auth(func):
         token = request.headers['AUTHORIZATION']
         if not token:
             return jsonify({'message': 'Please log in first.'}), 401
-
         try:
-            # payload = jwt.decode(token, app.config.get('SECRET_KEY'))  #todo: fix
-            jwt.decode(token, 'key', algorithms='HS256')
+            jwt.decode(token, current_app.config.get('SECRET_KEY'))
             return func(*args, **kwargs)
         except jwt.ExpiredSignatureError:
             return jsonify({'message': 'Signature expired. Please log in again.'})
