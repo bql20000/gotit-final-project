@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields, post_load, validate
 
-from app.database import db
+from app.extensions import db
 
 
 class UserModel(db.Model):
