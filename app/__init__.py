@@ -1,7 +1,7 @@
 from flask import Flask
 
 from app.models.UserModel import UserModel
-from app.controllers import user, item
+from app.controllers import user, item, category
 from app.extensions import db
 
 
@@ -17,9 +17,14 @@ def create_app():
 
     db.init_app(app)
 
+    # user api
     app.add_url_rule('/register', view_func=user.register, methods=['POST'])
     app.add_url_rule('/login', view_func=user.login, methods=['POST'])
 
-    app.add_url_rule('/', view_func=item.get_item, methods=['GET'])
+    # category api
+    app.add_url_rule('/categories', view_func=category.get_all_categories)
+    app.add_url_rule('/categories/<int:idx>', view_func=category.get_category_by_id)
+    app.add_url_rule('/categories/new', view_func=category.create_category, methods=['POST'])
+    #app.add_url_rule('/categories/<int:idx>/items', view_func=category.get_all_items_in_category)
 
     return app
