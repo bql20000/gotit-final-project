@@ -5,10 +5,10 @@ from app.controllers import user, item, category
 from app.extensions import db
 
 
-def create_app():
+def create_app(env):
     app = Flask(__name__)
 
-    if app.config['ENV'] == 'development':
+    if env == 'development':
         app.config.from_object('config.DevelopmentConfig')
     else:
         app.config.from_object('config.TestingConfig')
@@ -16,8 +16,6 @@ def create_app():
     print('DATABASE URI:', app.config['SQLALCHEMY_DATABASE_URI'])
 
     db.init_app(app)
-    with app.app_context():
-        db.create_all()
 
     # user api
     app.add_url_rule('/register', view_func=user.register, methods=['POST'])
