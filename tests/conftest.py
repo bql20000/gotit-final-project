@@ -5,7 +5,7 @@ from app.extensions import db
 from app.models.UserModel import UserModel
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def init_client():
     # initialize an app from application factory
     app = create_app('testing')
@@ -16,10 +16,11 @@ def init_client():
             yield client
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def init_db():
     # create database & its tables
-    print("WHYYY:", db.get_app())
+    db.session.commit()
+    db.drop_all()
     db.create_all()
 
     # create sample users
@@ -28,9 +29,4 @@ def init_db():
     user1.save_to_db()
     user2.save_to_db()
 
-    print("HUHUHUHUH:", db.get_app())
-
     yield db
-
-    # tear down the database
-    db.drop_all()
