@@ -51,12 +51,12 @@ def update_item(idx):
     try:
         user_make_req = get_user_id_from_request()
         # check if the item exists
-        old_item = ItemModel.find_by_id(idx)
-        if old_item is None:
+        item = ItemModel.find_by_id(idx)
+        if item is None:
             return {'message': f'Item with id {idx} not found.'}, 400
 
         # check if the updater is the item's owner
-        if old_item.user_id != user_make_req:
+        if item.user_id != user_make_req:
             return {'message': 'You are not the owner of this item.'}, 400
 
         # check if item's new title has already existed
@@ -67,15 +67,14 @@ def update_item(idx):
 
         # validate item's data
         data['user_id'] = user_make_req
-        updated_item = item_schema.load(data)
+        item_schema.load(data)
 
-        # delete old item & add the updated item & response back to client
-        old_item.delete_from_db()
-        updated_item.save_to_db()
+        # updated item & response back to client
+        item.update_to_db(data)
         return jsonify({
             'status': 'success',
-            'message': f"New item's id: {updated_item.id}.",
-            'item': item_schema.dump(updated_item)
+            'message': f'Successfully updated item id {idx}',
+            'item': item_schema.dump(item)
         }), 200
     except ValidationError as e:
         logging.exception("Invalid request data while updating item.")

@@ -32,6 +32,10 @@ class ItemModel(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def update_to_db(self, data):
+        self.query.filter_by(id=self.id).update(data)
+        db.session.commit()
+
     @classmethod
     def find_by_title(cls, title):
         return cls.query.filter_by(title=title).first()
@@ -53,7 +57,7 @@ class ItemSchema(Schema):
     title = fields.Str(required=True, validate=validate.Length(max=80))
     description = fields.Str(required=True, validate=validate.Length(max=255))
     cat_id = fields.Integer(required=True, validate=validate_cat_id)
-    user_id = fields.Integer(required=True)
+    user_id = fields.Integer()
 
     @post_load
     def make_item(self, data, **kwargs):

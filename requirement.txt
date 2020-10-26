@@ -3,3 +3,4 @@ mysqlclient = 2.0.1
 marshmallow = 3.8.0
 Flask-SQLALchemy = 2.4.4
 PyJWT = 1.4.2
+pytest = 6.1.1
