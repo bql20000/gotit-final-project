@@ -30,18 +30,20 @@ def create_category():
 
         # check if new category's name has existed."
         if CategoryModel.find_by_name(data.get('name')):
-            return jsonify({'message': 'Category existed.'}), 400
+            return jsonify({'message': f"Category {data.get('name')} existed."}), 400
 
         # save category to database & response to client
         cat.save_to_db()
         return jsonify({
-            'status': 'success',
             'message': 'Successfully created category {}'.format(cat.name),
             'category': category_schema.dump(cat)
         }), 201
-    except ValidationError as err:
-        logging.exception("Invalid category name: {}.".format(data.get('name')))
-        return jsonify(err.messages), 400
+    except ValidationError as e:
+        logging.exception('Invalid request data to create new category.')
+        return jsonify(e.messages), 400
+    except Exception as e:
+        logging.exception('Unknown error while creating new category.')
+        return jsonify({'message': 'Unknown error while creating new category.'}), 500
 
 
 def get_all_items_in_category(idx):
