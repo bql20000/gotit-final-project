@@ -53,5 +53,5 @@ def login():
             return jsonify(response), 200
     except Exception as e:
         logging.exception("Wrong username or password")
-        return jsonify({'message': 'Wrong username or password. Please try again.'}), 400
+        return jsonify({'message': 'Wrong username or password.'}), 400
 
