@@ -45,6 +45,7 @@ def requires_auth(func):
     return decorated_func
 
 
-def token_to_user_id(token):
-    pass
+def get_user_id_from_request():
+    token = request.headers['AUTHORIZATION']
+    return jwt.decode(token, current_app.config.get('SECRET_KEY')).get('sub')
 

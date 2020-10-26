@@ -12,6 +12,8 @@ class UserModel(db.Model):
     username = db.Column(db.String(32), unique=True)
     password = db.Column(db.String(32))
 
+    items = db.relationship('ItemModel')
+
     def __init__(self, username, password):
         self.username = username
         self.password = password
