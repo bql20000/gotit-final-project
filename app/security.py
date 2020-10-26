@@ -38,14 +38,15 @@ def requires_auth(func):
             jwt.decode(token, current_app.config.get('SECRET_KEY'))
             return func(*args, **kwargs)
         except jwt.ExpiredSignatureError:
-            return jsonify({'message': 'Signature expired. Please log in again.'})
+            return jsonify({'message': 'Signature expired. Please log in again.'}), 401
         except jwt.InvalidTokenError:
-            return jsonify({'message': 'Invalid token. Please log in again.'})
+            return jsonify({'message': 'Invalid token. Please log in again.'}), 401
 
     return decorated_func
 
 
 def get_user_id_from_request():
+    """Return the id of the user making the request."""
     token = request.headers['AUTHORIZATION']
     return jwt.decode(token, current_app.config.get('SECRET_KEY')).get('sub')
 
