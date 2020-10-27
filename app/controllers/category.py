@@ -8,6 +8,18 @@ from app.schemas.item import item_schema
 from app.schemas.category import category_schema
 
 
+class CategoryNotFoundError(Exception):
+    def __init__(self, messages='Category not found.', status_code=404):
+        self.messages = messages
+        self.status_code = status_code
+
+
+def check_category_exists(idx):
+    category = CategoryModel.query.filter_by(id=idx).first()
+    if category is None:
+        raise CategoryNotFoundError(f'Category with id {idx} not found.', 404)
+
+
 def get_all_categories():
     """Return all categories"""
     all_cats = CategoryModel.query.all()
@@ -16,10 +28,12 @@ def get_all_categories():
 
 def get_category_by_id(idx):
     """Return the category with id = idx."""
-    category = CategoryModel.query.filter_by(id=idx).first()
-    if category:
+    try:
+        check_category_exists(idx)
+        category = CategoryModel.query.filter_by(id=idx).first()
         return jsonify(category_schema.dump(category)), 200
-    return jsonify({'message': 'Category not found.'}), 404
+    except CategoryNotFoundError as e:
+        return jsonify({'message': e.messages}), e.status_code
 
 
 def create_category():
@@ -51,7 +65,14 @@ def create_category():
 def get_all_items_in_category(idx):
     """Return all items in the category with id = idx."""
     # check if category with id = idx exists
-    category = CategoryModel.query.filter_by(id=idx).first()
-    if category is None:
-        return {'message': f'Category with id {idx} not found.'}, 400
-    return jsonify({'items': [item_schema.dump(item) for item in category.items]}), 200
+    try:
+        check_category_exists(idx)
+        category = CategoryModel.query.filter_by(id=idx).first()
+        return jsonify({'items': [item_schema.dump(item) for item in category.items]}), 200
+    except CategoryNotFoundError as e:
+        logging.exception(e.messages)
+        return jsonify({'message': e.messages}), e.status_code
+    except:
+        logging.exception('Unknown error while getting all items in a category.')
+        return jsonify(message='Unknown error while creating new category.'), 500
+

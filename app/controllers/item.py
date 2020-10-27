@@ -92,7 +92,7 @@ def update_item(idx, user_id):
         # check if item's new title has already existed
         item_by_name = ItemModel.query.filter_by(name=data.get('name')).first()
         if item_by_name and item_by_name.id != idx:
-            raise ValidationError('New item name existed.', status_code=400)
+            raise ValidationError('New item name existed.')
 
         # validate item's data
         item_schema.load(data)
@@ -107,7 +107,7 @@ def update_item(idx, user_id):
         }), 200
     except (OwnershipError, ItemNotFoundError) as e:
         logging.exception(e.messages)
-        return jsonify({'messages': e.messages}), e.status_code
+        return jsonify({'message': e.messages}), e.status_code
     except ValidationError as e:
         logging.exception('Invalid request data to create new item.')
         return jsonify({'messages': e.messages}), 400
