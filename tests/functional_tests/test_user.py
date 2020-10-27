@@ -13,7 +13,7 @@ def test_register(init_client, init_db):
     # username existed
     resp = register_demo(init_client, 'long', '2345')
     assert resp.status_code == 400
-    assert resp.get_json().get('message') == 'Username existed, please choose another username.'
+    assert resp.get_json().get('messages')[0] == 'Username existed, please choose another username.'
 
 
 def login_demo(client, username, password):

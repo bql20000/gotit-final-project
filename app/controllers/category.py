@@ -3,8 +3,9 @@ import logging
 from flask import jsonify, request
 from marshmallow import ValidationError
 
-from app.models.CategoryModel import CategoryModel, category_schema
-from app.models.ItemModel import item_schema
+from app.models.category import CategoryModel
+from app.schemas.item import item_schema
+from app.schemas.category import category_schema
 
 
 def get_all_categories():
@@ -15,9 +16,9 @@ def get_all_categories():
 
 def get_category_by_id(idx):
     """Return the category with id = idx."""
-    cat = CategoryModel.query.filter_by(id=idx).first()
-    if cat:
-        return jsonify(category_schema.dump(cat)), 200
+    category = CategoryModel.query.filter_by(id=idx).first()
+    if category:
+        return jsonify(category_schema.dump(category)), 200
     return jsonify({'message': 'Category not found.'}), 404
 
 
@@ -26,21 +27,22 @@ def create_category():
     data = request.get_json()
     try:
         # validate the data
-        cat = category_schema.load(data)
+        category_schema.load(data)
 
         # check if new category's name has existed."
-        if CategoryModel.find_by_name(data.get('name')):
+        if CategoryModel.query.filter_by(name=data.get('name')).first():
             return jsonify({'message': f"Category {data.get('name')} existed."}), 400
 
         # save category to database & response to client
-        cat.save_to_db()
+        category = CategoryModel(**data)
+        category.save_to_db()
         return jsonify({
-            'message': 'Successfully created category {}'.format(cat.name),
-            'category': category_schema.dump(cat)
+            'message': f'Successfully created category {category.name}.',
+            'category': category_schema.dump(category)
         }), 201
     except ValidationError as e:
         logging.exception('Invalid request data to create new category.')
-        return jsonify(e.messages), 400
+        return jsonify({'messages': e.messages}), 400
     except Exception as e:
         logging.exception('Unknown error while creating new category.')
         return jsonify({'message': 'Unknown error while creating new category.'}), 500
@@ -49,7 +51,7 @@ def create_category():
 def get_all_items_in_category(idx):
     """Return all items in the category with id = idx."""
     # check if category with id = idx exists
-    cat = CategoryModel.find_by_id(idx)
-    if cat is None:
+    category = CategoryModel.query.filter_by(id=idx).first()
+    if category is None:
         return {'message': f'Category with id {idx} not found.'}, 400
-    return jsonify({'items': [item_schema.dump(item) for item in cat.items]}), 200
+    return jsonify({'items': [item_schema.dump(item) for item in category.items]}), 200

@@ -1,0 +1,21 @@
+from marshmallow import Schema, fields, validate, ValidationError
+
+from app.models.category import CategoryModel
+
+
+def validate_category_id(idx):
+    """Check if a category with id = idx exists."""
+    category = CategoryModel.find_by_id(idx)
+    if category is None:
+        raise ValidationError('Category not existed.')
+
+
+class ItemSchema(Schema):
+    id = fields.Integer()
+    name = fields.Str(required=True, validate=validate.Length(max=32))
+    description = fields.Str(required=True, validate=validate.Length(max=255))
+    category_id = fields.Integer(required=True, validate=validate_category_id)
+    user_id = fields.Integer()
+
+
+item_schema = ItemSchema()
