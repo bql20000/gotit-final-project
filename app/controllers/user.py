@@ -23,13 +23,13 @@ def register():
         # save user's data & response a successful message
         user = UserModel(**data)
         user.save_to_db()
-        return jsonify({'message': 'User registers successfully!'}), 201
+        return jsonify(message='User registers successfully.'), 201
     except ValidationError as e:
         logging.exception('Invalid request data to register.')
-        return jsonify({'messages': e.messages}), 400
+        return jsonify(e.messages), 400
     except:
         logging.exception('Unknown error while registering.')
-        return jsonify({'message': 'Unknown error while registering.'}), 500
+        return jsonify(message='Unknown error while registering'), 500
 
 
 def login():
@@ -52,12 +52,18 @@ def login():
         return jsonify(message='Successfully logged in.',
                        jwt_token=jwt_token.decode()
                        ), 200
-    except ValidationError as e:
-        logging.exception('Invalid request data to login.')
-        return jsonify({'messages': e.messages}), 400
-    except NoResultFound as e:
+    except (NoResultFound, ValidationError) as e:
         logging.exception(e)
-        return jsonify({'message': 'Wrong username or password.'}), 400
+        response = {'message': 'Wrong username or password.',
+                    'username': [],
+                    'password': []
+                    }
+        if e.messages.get('username'):
+            response['username'] = e.messages.get('username')
+        if e.messages.get('password'):
+            response['password'] = e.messages.get('password')
+
+        return jsonify(response), 400
     except:
         logging.exception('Unknown error while logging in.')
         return jsonify({'message': 'Unknown error while logging in.'}), 500
