@@ -1,12 +1,13 @@
 import logging
 
-from flask import request, jsonify
+from flask import request, jsonify, current_app
 from marshmallow import ValidationError
 from sqlalchemy.orm.exc import NoResultFound
 
 from app.models.user import UserModel
 from app.schemas.user import user_schema
 from app.security import encode_jwt
+from app.extensions import hashing
 
 
 def register():
@@ -44,7 +45,7 @@ def login():
         # find users from database --> throws NoResultFound exception
         user = UserModel.query.filter_by(
             username=data.get('username'),
-            password=data.get('password')
+            password=hashing.hash_value(data.get('password'), current_app.config['HASHING_SALT'])
         ).one()
 
         # generate jwt & response to client

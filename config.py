@@ -1,5 +1,6 @@
 class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    HASHING_SALT = '[|1\xfa\xb7\x13\xbb^c\x9a-i7\xbb\xba`\x19\xa4\x83A\xe0U\x94]'
     DEBUG = False
     TESTING = False
 

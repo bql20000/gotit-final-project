@@ -8,3 +8,6 @@ print('Dev key:', dev_key)
 
 print('Test key:', test_key)
 # >>>
+
+salt = os.urandom(24)
+print('Password hashing salt:', salt)

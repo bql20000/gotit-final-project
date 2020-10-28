@@ -2,7 +2,7 @@ from flask import Flask
 
 from app.models.user import UserModel
 from app.controllers import user, item, category
-from app.extensions import db
+from app.extensions import db, hashing
 
 
 def create_app():
@@ -16,6 +16,7 @@ def create_app():
     print('DATABASE URI:', app.config['SQLALCHEMY_DATABASE_URI'])
 
     db.init_app(app)
+    hashing.init_app(app)
     with app.app_context():
         db.create_all()
 
