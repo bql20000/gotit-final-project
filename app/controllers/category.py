@@ -3,6 +3,7 @@ import logging
 from flask import jsonify, request
 from marshmallow import ValidationError
 
+from app.app import app
 from app.models.category import CategoryModel
 from app.schemas.item import item_schema
 from app.schemas.category import category_schema
@@ -20,6 +21,7 @@ def check_category_exists(idx):
         raise CategoryNotFoundError(f'Category with id {idx} not found.', 404)
 
 
+@app.route('/categories', methods=['GET'])
 def get_all_categories():
     """Return all categories"""
     try:
@@ -30,6 +32,7 @@ def get_all_categories():
         return jsonify(message='Unknown error while getting all categories.'), 500
 
 
+@app.route('/categories/<int:idx>', methods=['GET'])
 def get_category_by_id(idx):
     """Return the category with id = idx."""
     try:
@@ -43,6 +46,7 @@ def get_category_by_id(idx):
         return jsonify(message='Unknown error while getting a category.'), 500
 
 
+@app.route('/categories', methods=['POST'])
 def create_category():
     """Create a new category."""
     data = request.get_json()
@@ -68,6 +72,7 @@ def create_category():
         return jsonify(message='Unknown error while creating new category.'), 500
 
 
+@app.route('/categories<int:idx>', methods=['GET'])
 def get_all_items_in_category(idx):
     """Return all items in the category with id = idx."""
     # check if category with id = idx exists

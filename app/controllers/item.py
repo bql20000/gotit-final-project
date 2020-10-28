@@ -3,6 +3,7 @@ from flask import request, jsonify
 
 from marshmallow import ValidationError
 
+from app.app import app
 from app.security import requires_auth
 from app.schemas.item import item_schema
 from app.models.item import ItemModel
@@ -34,8 +35,9 @@ def check_item_ownership(idx, user_id):
         raise OwnershipError(f'You are not the owner of item with id {idx}.')
 
 
+@app.route('/items/<int:idx>', methods=['GET'])
 def get_item(idx):
-    """Response an item."""
+    """Response an item with id = idx."""
     try:
         check_item_exists_by_id(idx)
         item = ItemModel.query.filter_by(id=idx).first()
@@ -48,6 +50,7 @@ def get_item(idx):
         return jsonify(message='Unknown error while getting an item.'), 500
 
 
+@app.route('/items/', methods=['POST'])
 @requires_auth
 def create_item(user_id):
     """Create a new item, save to database and response it."""
@@ -81,6 +84,7 @@ def create_item(user_id):
         return jsonify(message='Unknown error while creating a new item.'), 500
 
 
+@app.route('/items/<int:idx>', methods=['PUT'])
 @requires_auth
 def update_item(idx, user_id):
     """Update an existing item & response the updated one."""
@@ -125,6 +129,7 @@ def update_item(idx, user_id):
         return jsonify(message='Unknown error while updating an item.'), 500
 
 
+@app.route('/items/<int:idx>', methods=['DELETE'])
 @requires_auth
 def delete_item(idx, user_id):
     # check if the item exists

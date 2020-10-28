@@ -4,12 +4,14 @@ from flask import request, jsonify, current_app
 from marshmallow import ValidationError
 from sqlalchemy.orm.exc import NoResultFound
 
+from app.app import app
 from app.models.user import UserModel
 from app.schemas.user import user_schema
 from app.security import encode_jwt
 from app.extensions import hashing
 
 
+@app.route('/register', methods=['POST'])
 def register():
     """A new user sends username & password to register."""
     data = request.get_json()
@@ -33,6 +35,7 @@ def register():
         return jsonify(message='Unknown error while registering'), 500
 
 
+@app.route('/login', methods=['POST'])
 def login():
     """User sends username & password to login.
     :return: successful message & JWT

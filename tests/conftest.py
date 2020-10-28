@@ -1,21 +1,21 @@
 import pytest
 
-from app import create_app
 from app.extensions import db
 
+from app.controllers.user import *
+from app.controllers.category import *
+from app.controllers.item import *    # an application has been created from this
 
-@pytest.fixture(scope='function')
+
+@pytest.fixture(scope='session')
 def init_client():
-    # initialize an app from application factory
-    app = create_app()
-
     # Establish an application context & a test client
     with app.test_client() as client:
         with app.app_context():
             yield client
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='session')
 def init_db():
     # create database & its tables
     db.session.commit()
