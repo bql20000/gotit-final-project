@@ -5,8 +5,8 @@ from marshmallow import ValidationError
 
 from app.app import app
 from app.models.category import CategoryModel
-from app.schemas.item import item_schema
-from app.schemas.category import category_schema
+from app.schemas.item import ItemSchema
+from app.schemas.category import CategorySchema
 
 
 class CategoryNotFoundError(Exception):
@@ -26,7 +26,7 @@ def get_all_categories():
     """Return all categories"""
     try:
         all_cats = CategoryModel.query.all()
-        return jsonify(categories=category_schema.dump(all_cats, many=True)), 200
+        return jsonify(categories=CategorySchema(many=True).dump(all_cats)), 200
     except:
         logging.exception('Unknown error while getting all categories.')
         return jsonify(message='Unknown error while getting all categories.'), 500
@@ -38,7 +38,7 @@ def get_category_by_id(idx):
     try:
         check_category_exists(idx)
         category = CategoryModel.query.filter_by(id=idx).first()
-        return jsonify(category=category_schema.dump(category)), 200
+        return jsonify(category=CategorySchema().dump(category)), 200
     except CategoryNotFoundError as e:
         return jsonify({'message': e.messages}), e.status_code
     except:
@@ -52,7 +52,7 @@ def create_category():
     data = request.get_json()
     try:
         # validate the data
-        category_schema.load(data)
+        CategorySchema().load(data)
 
         # check if new category's name has existed."
         if CategoryModel.query.filter_by(name=data.get('name')).first():
@@ -62,7 +62,7 @@ def create_category():
         category = CategoryModel(**data)
         category.save_to_db()
         return jsonify(message=f'Successfully created category {category.name}.',
-                       category=category_schema.dump(category)
+                       category=CategorySchema().dump(category)
                        ), 201
     except ValidationError as e:
         logging.exception('Invalid request data to create new category.')
@@ -72,7 +72,7 @@ def create_category():
         return jsonify(message='Unknown error while creating new category.'), 500
 
 
-@app.route('/categories<int:idx>', methods=['GET'])
+@app.route('/categories/<int:idx>/items', methods=['GET'])
 def get_all_items_in_category(idx):
     """Return all items in the category with id = idx."""
     # check if category with id = idx exists
@@ -86,7 +86,7 @@ def get_all_items_in_category(idx):
         for i in range(n_pages): paginated_items.append([])
         for i in range(n_items):
             i_page = i // n_items_per_page
-            paginated_items[i_page].append(item_schema.dump(category.items[i]))
+            paginated_items[i_page].append(ItemSchema().dump(category.items[i]))
 
         return jsonify(number_of_items=n_items,
                        number_of_items_per_page=n_items_per_page,

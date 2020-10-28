@@ -17,5 +17,3 @@ class ItemSchema(Schema):
     category_id = fields.Integer(required=True, validate=validate_category_id)
     user_id = fields.Integer()
 
-
-item_schema = ItemSchema()

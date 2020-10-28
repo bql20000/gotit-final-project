@@ -5,7 +5,7 @@ from marshmallow import ValidationError
 
 from app.app import app
 from app.security import requires_auth
-from app.schemas.item import item_schema
+from app.schemas.item import ItemSchema
 from app.models.item import ItemModel
 from app.extensions import db
 
@@ -41,7 +41,7 @@ def get_item(idx):
     try:
         check_item_exists_by_id(idx)
         item = ItemModel.query.filter_by(id=idx).first()
-        return jsonify(item=item_schema.dump(item)), 200
+        return jsonify(item=ItemSchema().dump(item)), 200
     except ItemNotFoundError as e:
         logging.exception(e.messages)
         return jsonify(message=e.messages), e.status_code
@@ -50,14 +50,14 @@ def get_item(idx):
         return jsonify(message='Unknown error while getting an item.'), 500
 
 
-@app.route('/items/', methods=['POST'])
+@app.route('/items', methods=['POST'])
 @requires_auth
 def create_item(user_id):
     """Create a new item, save to database and response it."""
     data = request.get_json()
     try:
         # add item's owner to data & validate request's data
-        item_schema.load(data)
+        ItemSchema().load(data)
 
         # check if item's title has already existed
         if ItemModel.query.filter_by(name=data.get('name')).first():
@@ -67,7 +67,7 @@ def create_item(user_id):
         item = ItemModel(**data, user_id=user_id)
         item.save_to_db()
         return jsonify(message=f'Successfully created item {item.name}.',
-                       item=item_schema.dump(item)
+                       item=ItemSchema().dump(item)
                        ), 201
     except ValidationError as e:
         logging.exception('Invalid request data to create new item.')
@@ -102,14 +102,14 @@ def update_item(idx, user_id):
             raise ValidationError({'name': ['New item name existed.']})
 
         # validate item's data
-        item_schema.load(data)
+        ItemSchema().load(data)
 
         # updated item & response back to client
         ItemModel.query.filter_by(id=idx).update(data)
         db.session.commit()
 
         return jsonify(message=f'Successfully updated item with id {idx}.',
-                       item=item_schema.dump(ItemModel.query.filter_by(id=idx).first())
+                       item=ItemSchema().dump(ItemModel.query.filter_by(id=idx).first())
                        ), 200
     except (OwnershipError, ItemNotFoundError) as e:
         logging.exception(e.messages)
@@ -132,14 +132,14 @@ def update_item(idx, user_id):
 @app.route('/items/<int:idx>', methods=['DELETE'])
 @requires_auth
 def delete_item(idx, user_id):
-    # check if the item exists
-    check_item_exists_by_id(idx)
-
-    # check if the deleter is the item's owner
-    check_item_ownership(idx, user_id)
-
-    # delete the item & response a message
     try:
+        # check if the item exists
+        check_item_exists_by_id(idx)
+
+        # check if the deleter is the item's owner
+        check_item_ownership(idx, user_id)
+
+        # delete the item & response a message
         item = ItemModel.query.filter_by(id=idx).first()
         item.delete_from_db()
         return jsonify(message=f'Successfully deleted item with id {idx}.'), 200

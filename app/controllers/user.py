@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from app.app import app
 from app.models.user import UserModel
-from app.schemas.user import user_schema
+from app.schemas.user import UserSchema
 from app.security import encode_jwt
 from app.extensions import hashing
 
@@ -17,7 +17,7 @@ def register():
     data = request.get_json()
     try:
         # validate data
-        user_schema.load(data)
+        UserSchema().load(data)
 
         # check if username exists
         if UserModel.query.filter_by(username=data.get('username')).first():
@@ -43,7 +43,7 @@ def login():
     data = request.get_json()
     try:
         # validate data
-        user_schema.load(data)
+        UserSchema().load(data)
 
         # find users from database --> throws NoResultFound exception
         user = UserModel.query.filter_by(
