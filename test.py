@@ -1,5 +1,3 @@
-L = [[]] * 10
+L = [1,2,3]
 
-print(len(L))
-#print(len(L[0]))
-print(L)
+print(L[4:7])
