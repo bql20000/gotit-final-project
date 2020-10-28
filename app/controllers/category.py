@@ -43,7 +43,6 @@ def get_category_by_id(idx):
         return jsonify(message='Unknown error while getting a category.'), 500
 
 
-
 def create_category():
     """Create a new category."""
     data = request.get_json()
@@ -75,11 +74,22 @@ def get_all_items_in_category(idx):
     try:
         check_category_exists(idx)
         category = CategoryModel.query.filter_by(id=idx).first()
-        return jsonify(items=[item_schema.dump(item) for item in category.items]), 200
+        n_items = len(category.items)
+        n_items_per_page = 2
+        n_pages = n_items // n_items_per_page + (n_items % n_items_per_page > 0)
+        paginated_items = []
+        for i in range(n_pages): paginated_items.append([])
+        for i in range(n_items):
+            i_page = i // n_items_per_page
+            paginated_items[i_page].append(item_schema.dump(category.items[i]))
+
+        return jsonify(number_of_items=n_items,
+                       number_of_items_per_page=n_items_per_page,
+                       number_of_pages=n_pages,
+                       items=paginated_items), 200
     except CategoryNotFoundError as e:
         logging.exception(e.messages)
         return jsonify(message=e.messages), e.status_code
     except:
         logging.exception('Unknown error while getting all items in a category.')
         return jsonify(message='Unknown error while getting all items in a category.'), 500
-
