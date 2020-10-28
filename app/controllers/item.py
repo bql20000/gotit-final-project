@@ -38,14 +38,14 @@ def get_item(idx):
     """Response an item."""
     try:
         check_item_exists_by_id(idx)
-        item = ItemModel.find_by_id(idx)
-        return item_schema.dump(item), 200
+        item = ItemModel.query.filter_by(id=idx).first()
+        return jsonify(item=item_schema.dump(item)), 200
     except ItemNotFoundError as e:
         logging.exception(e.messages)
-        return jsonify({'messages': e.messages}), e.status_code
+        return jsonify(message=e.messages), e.status_code
     except:
         logging.exception('Unknown error while getting an item.')
-        return jsonify({'message': 'Unknown error while getting an item.'}), 500
+        return jsonify(message='Unknown error while getting an item.'), 500
 
 
 @requires_auth
@@ -58,24 +58,27 @@ def create_item(user_id):
 
         # check if item's title has already existed
         if ItemModel.query.filter_by(name=data.get('name')).first():
-            raise ValidationError('Title existed, please choose another title.')
+            raise ValidationError({'name': ['Title existed, please choose another title.']})
 
         # save item to database and response
         item = ItemModel(**data, user_id=user_id)
         item.save_to_db()
-        return jsonify({
-            'message': f'Successfully created item {item.name}.',
-            'item': item_schema.dump(item)
-        }), 201
-    except (OwnershipError, ItemNotFoundError) as e:
-        logging.exception(e.messages)
-        return jsonify({'messages': e.messages}), e.status_code
+        return jsonify(message=f'Successfully created item {item.name}.',
+                       item=item_schema.dump(item)
+                       ), 201
     except ValidationError as e:
         logging.exception('Invalid request data to create new item.')
-        return jsonify({'messages': e.messages}), 400
+        response = {'name': [], 'description': [], 'category_id': []}
+        if e.messages.get('name'):
+            response['name'] = e.messages.get('name')
+        if e.messages.get('description'):
+            response['description'] = e.messages.get('description')
+        if e.messages.get('category_id'):
+            response['category_id'] = e.messages.get('category_id')
+        return jsonify(response), 400
     except:
-        logging.exception('Unknown error.')
-        return jsonify({'message': 'Unknown error.'}), 500
+        logging.exception('Unknown error while creating a new item.')
+        return jsonify(message='Unknown error while creating a new item.'), 500
 
 
 @requires_auth
@@ -92,7 +95,7 @@ def update_item(idx, user_id):
         # check if item's new title has already existed
         item_by_name = ItemModel.query.filter_by(name=data.get('name')).first()
         if item_by_name and item_by_name.id != idx:
-            raise ValidationError('New item name existed.')
+            raise ValidationError({'name': ['New item name existed.']})
 
         # validate item's data
         item_schema.load(data)
@@ -101,19 +104,25 @@ def update_item(idx, user_id):
         ItemModel.query.filter_by(id=idx).update(data)
         db.session.commit()
 
-        return jsonify({
-            'message': f'Successfully updated item id {idx}.',
-            'item': item_schema.dump(ItemModel.query.filter_by(id=idx).first())
-        }), 200
+        return jsonify(message=f'Successfully updated item with id {idx}.',
+                       item=item_schema.dump(ItemModel.query.filter_by(id=idx).first())
+                       ), 200
     except (OwnershipError, ItemNotFoundError) as e:
         logging.exception(e.messages)
-        return jsonify({'message': e.messages}), e.status_code
+        return jsonify(message=e.messages), e.status_code
     except ValidationError as e:
-        logging.exception('Invalid request data to create new item.')
-        return jsonify({'messages': e.messages}), 400
+        logging.exception('Invalid request data to update item.')
+        response = {'name': [], 'description': [], 'category_id': []}
+        if e.messages.get('name'):
+            response['name'] = e.messages.get('name')
+        if e.messages.get('description'):
+            response['description'] = e.messages.get('description')
+        if e.messages.get('category_id'):
+            response['category_id'] = e.messages.get('category_id')
+        return jsonify(response), 400
     except:
         logging.exception('Unknown error while updating an item.')
-        return jsonify({'message': 'Unknown error while updating an item.'}), 500
+        return jsonify(message='Unknown error while updating an item.'), 500
 
 
 @requires_auth
@@ -128,10 +137,10 @@ def delete_item(idx, user_id):
     try:
         item = ItemModel.query.filter_by(id=idx).first()
         item.delete_from_db()
-        return jsonify({'message': f'Successfully deleted item with id {idx}.'}), 200
+        return jsonify(message=f'Successfully deleted item with id {idx}.'), 200
     except (OwnershipError, ItemNotFoundError) as e:
         logging.exception(e.messages)
-        return jsonify({'messages': e.messages}), e.status_code
+        return jsonify(message=e.messages), e.status_code
     except:
         logging.exception('Unknown error while deleting an item.')
-        return jsonify({'message': 'Unknown error while deleting an item.'}), 500
+        return jsonify(message='Unknown error while deleting an item.'), 500

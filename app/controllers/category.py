@@ -22,8 +22,12 @@ def check_category_exists(idx):
 
 def get_all_categories():
     """Return all categories"""
-    all_cats = CategoryModel.query.all()
-    return jsonify(category_schema.dump(all_cats, many=True)), 200
+    try:
+        all_cats = CategoryModel.query.all()
+        return jsonify(categories=category_schema.dump(all_cats, many=True)), 200
+    except:
+        logging.exception('Unknown error while getting all categories.')
+        return jsonify(message='Unknown error while getting all categories.'), 500
 
 
 def get_category_by_id(idx):
@@ -31,9 +35,13 @@ def get_category_by_id(idx):
     try:
         check_category_exists(idx)
         category = CategoryModel.query.filter_by(id=idx).first()
-        return jsonify(category_schema.dump(category)), 200
+        return jsonify(category=category_schema.dump(category)), 200
     except CategoryNotFoundError as e:
         return jsonify({'message': e.messages}), e.status_code
+    except:
+        logging.exception('Unknown error while getting a category.')
+        return jsonify(message='Unknown error while getting a category.'), 500
+
 
 
 def create_category():
@@ -45,21 +53,20 @@ def create_category():
 
         # check if new category's name has existed."
         if CategoryModel.query.filter_by(name=data.get('name')).first():
-            return jsonify({'message': f"Category {data.get('name')} existed."}), 400
+            return jsonify({'name': [f"Category {data.get('name')} existed."]}), 400
 
         # save category to database & response to client
         category = CategoryModel(**data)
         category.save_to_db()
-        return jsonify({
-            'message': f'Successfully created category {category.name}.',
-            'category': category_schema.dump(category)
-        }), 201
+        return jsonify(message=f'Successfully created category {category.name}.',
+                       category=category_schema.dump(category)
+                       ), 201
     except ValidationError as e:
         logging.exception('Invalid request data to create new category.')
-        return jsonify({'messages': e.messages}), 400
-    except Exception as e:
+        return jsonify(e.messages), 400
+    except:
         logging.exception('Unknown error while creating new category.')
-        return jsonify({'message': 'Unknown error while creating new category.'}), 500
+        return jsonify(message='Unknown error while creating new category.'), 500
 
 
 def get_all_items_in_category(idx):
@@ -68,11 +75,11 @@ def get_all_items_in_category(idx):
     try:
         check_category_exists(idx)
         category = CategoryModel.query.filter_by(id=idx).first()
-        return jsonify({'items': [item_schema.dump(item) for item in category.items]}), 200
+        return jsonify(items=[item_schema.dump(item) for item in category.items]), 200
     except CategoryNotFoundError as e:
         logging.exception(e.messages)
-        return jsonify({'message': e.messages}), e.status_code
+        return jsonify(message=e.messages), e.status_code
     except:
         logging.exception('Unknown error while getting all items in a category.')
-        return jsonify(message='Unknown error while creating new category.'), 500
+        return jsonify(message='Unknown error while getting all items in a category.'), 500
 

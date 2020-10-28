@@ -5,7 +5,7 @@ from app.models.category import CategoryModel
 
 def validate_category_id(idx):
     """Check if a category with id = idx exists."""
-    category = CategoryModel.find_by_id(idx)
+    category = CategoryModel.query.filter_by(id=idx).first()
     if category is None:
         raise ValidationError('Category not existed.')
 

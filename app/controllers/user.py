@@ -58,12 +58,13 @@ def login():
                     'username': [],
                     'password': []
                     }
-        if e.messages.get('username'):
-            response['username'] = e.messages.get('username')
-        if e.messages.get('password'):
-            response['password'] = e.messages.get('password')
+        if isinstance(e, ValidationError):
+            if e.messages.get('username'):
+                response['username'] = e.messages.get('username')
+            if e.messages.get('password'):
+                response['password'] = e.messages.get('password')
 
         return jsonify(response), 400
     except:
         logging.exception('Unknown error while logging in.')
-        return jsonify({'message': 'Unknown error while logging in.'}), 500
+        return jsonify(message='Unknown error while logging in.'), 500
