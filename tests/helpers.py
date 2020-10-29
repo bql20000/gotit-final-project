@@ -60,3 +60,9 @@ def update_item_demo(client, token, item_id, name, description, category_id):
                              "category_id": category_id},
                       headers={"AUTHORIZATION": token}
                       )
+
+
+def request_page_demo(client, category_id, page_number, items_per_page):
+    return client.post(f'/categories/{category_id}/items',
+                       json={"page_number": page_number, 'items_per_page': items_per_page})
+
