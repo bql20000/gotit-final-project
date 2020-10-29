@@ -13,7 +13,7 @@ from app.helpers import validate_item_id, load_request_data, validate_ownership
 def get_item(idx):
     """Response an item with id = idx."""
     item = validate_item_id(idx)
-    return jsonify(item=ItemSchema().dump(item)), 200
+    return jsonify(ItemSchema().dump(item)), 200
 
 
 @app.route('/items', methods=['POST'])
@@ -24,7 +24,7 @@ def create_item(data, user_id):
 
     # check if item's title has already existed
     if ItemModel.query.filter_by(name=data.get('name')).first():
-        raise BadRequest('Item name existed.')
+        raise BadRequest(f"Item {data.get('name')} existed.")
 
     # save item to database and response
     item = ItemModel(**data, user_id=user_id)

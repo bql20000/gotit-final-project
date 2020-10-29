@@ -16,7 +16,7 @@ def register(data):
 
     # check if username exists
     if UserModel.query.filter_by(username=data.get('username')).first():
-        raise BadRequest('Username existed')
+        raise BadRequest('Username existed.')
 
     # save user's data & response a successful message
     user = UserModel(**data)

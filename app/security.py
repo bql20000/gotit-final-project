@@ -27,7 +27,7 @@ def encode_jwt(user_id):
 def requires_auth(func):
     @wraps(func)
     def decorated_func(*args, **kwargs):
-        token = request.headers['AUTHORIZATION']
+        token = request.headers.get('AUTHORIZATION')
         if not token:
             return jsonify(message='Please log in first.'), 401
         try:
