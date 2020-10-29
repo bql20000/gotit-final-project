@@ -42,3 +42,21 @@ def login_demo(client, username, password):
 
 def create_category_demo(client, name):
     return client.post('/categories', json={"name": name})
+
+
+def create_item_demo(client, token, name, description, category_id):
+    return client.post('/items',
+                       json={"name": name,
+                             "description": description,
+                             "category_id": category_id},
+                       headers={"AUTHORIZATION": token}
+                       )
+
+
+def update_item_demo(client, token, item_id, name, description, category_id):
+    return client.put('/items/' + str(item_id),
+                      json={"name": name,
+                             "description": description,
+                             "category_id": category_id},
+                      headers={"AUTHORIZATION": token}
+                      )

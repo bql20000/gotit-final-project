@@ -1,21 +1,4 @@
-from tests.helpers import login_demo
-
-
-def create_item_demo(client, token, name, description, category_id):
-    return client.post('/items',
-                       json={"name": name,
-                             "description": description,
-                             "category_id": category_id},
-                       headers={"AUTHORIZATION": token}
-                       )
-
-def update_item_demo(client, token, item_id, name, description, category_id):
-    return client.put('/items/' + str(item_id),
-                       json={"name": name,
-                             "description": description,
-                             "category_id": category_id},
-                       headers={"AUTHORIZATION": token}
-                       )
+from tests.helpers import login_demo, create_item_demo, update_item_demo
 
 
 def test_get_item_by_id(init_client, init_db):
