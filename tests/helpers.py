@@ -1,5 +1,3 @@
-from functools import wraps
-
 from app.models.user import UserModel
 from app.models.category import CategoryModel
 from app.models.item import ItemModel
@@ -33,36 +31,60 @@ def create_db_samples():
 
 
 def register_demo(client, username, password):
-    return client.post('/register', json={"username": username, "password": password})
+    """Return a response object received by the client after making a
+    HTTP post request to register.
+    """
+    return client.post('/register', json={'username': username, 'password': password})
 
 
 def login_demo(client, username, password):
-    return client.post('/login', json={"username": username, "password": password})
+    """Return a response object received by the client after making a
+    HTTP post request to login.
+    """
+    return client.post('/login', json={'username': username, 'password': password})
 
 
 def create_category_demo(client, name):
-    return client.post('/categories', json={"name": name})
+    """Return a response object received by the client after making a
+    HTTP post request to create a category.
+    """
+    return client.post('/categories', json={'name': name})
 
 
 def create_item_demo(client, token, name, description, category_id):
+    """Return a response object received by the client after making a
+    HTTP post request to create an item.
+    """
+
     return client.post('/items',
-                       json={"name": name,
-                             "description": description,
-                             "category_id": category_id},
-                       headers={"AUTHORIZATION": token}
+                       json={'name': name,
+                             'description': description,
+                             'category_id': category_id},
+                       headers={'AUTHORIZATION': token}
                        )
 
 
 def update_item_demo(client, token, item_id, name, description, category_id):
-    return client.put('/items/' + str(item_id),
+    """Return a response object received by the client after making a
+    HTTP put request to update an item.
+    """
+
+    return client.put(f'/items/{item_id}',
                       json={"name": name,
-                             "description": description,
-                             "category_id": category_id},
-                      headers={"AUTHORIZATION": token}
+                            'description': description,
+                            'category_id': category_id},
+                      headers={'AUTHORIZATION': token}
                       )
 
 
 def request_page_demo(client, category_id, page_number, items_per_page):
+    """Return a response object received by the client after making a
+    HTTP post request to retrieve a list of item.
+    The item list is determined by page_number & items_per_page provided
+    by the client.
+    """
+
     return client.post(f'/categories/{category_id}/items',
-                       json={"page_number": page_number, 'items_per_page': items_per_page})
+                       json={'page_number': page_number,
+                             'items_per_page': items_per_page})
 

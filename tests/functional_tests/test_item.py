@@ -4,7 +4,7 @@ from tests.helpers import login_demo, create_item_demo, update_item_demo
 def test_get_item_by_id(init_client, init_db):
     """Test getting an item by its id in different scenarios."""
     test_id = 1
-    resp = init_client.get('/items/' + str(test_id))
+    resp = init_client.get(f'/items/{test_id}')
     assert resp.status_code == 200
     assert resp.get_json()['name'] == 'ball'
     assert resp.get_json()['description'] == 'A ball'
@@ -12,7 +12,7 @@ def test_get_item_by_id(init_client, init_db):
     assert resp.get_json()['user_id'] == 1
 
     test_id = 0
-    resp = init_client.get('/items/' + str(test_id))
+    resp = init_client.get(f'/items/{test_id}')
     assert resp.status_code == 404
     assert resp.get_json()['message'] == f'Item with id {test_id} not found.'
 
@@ -29,9 +29,9 @@ def test_create_item(init_client, init_db):
 
     # 401 - without logging in (without access token)
     resp = init_client.post('/items',
-                            json={"name": test_name,
-                                  "description": test_description,
-                                  "category_id": test_category_id}
+                            json={'name': test_name,
+                                  'description': test_description,
+                                  'category_id': test_category_id}
                             )
     assert resp.status_code == 401
     assert resp.get_json()['message'] == 'Please log in first.'
@@ -137,17 +137,17 @@ def test_delete_item(init_client, init_db):
 
     # 404 - item with id = test_id not found
     test_id = 0
-    resp = init_client.delete('/items/' + str(test_id), headers={"AUTHORIZATION": token})
+    resp = init_client.delete(f'/items/{test_id}', headers={'AUTHORIZATION': token})
     assert resp.status_code == 404
     assert resp.get_json()['message'] == f'Item with id {test_id} not found.'
 
     # 403 - not allowed to modify (ownership required)
     test_id = 1  # user 2 only own item 3,4
-    resp = init_client.delete('/items/' + str(test_id), headers={"AUTHORIZATION": token})
+    resp = init_client.delete(f'/items/{test_id}', headers={'AUTHORIZATION': token})
     assert resp.status_code == 403
     assert resp.get_json()['message'] == 'You are not allowed to modify this item.'
 
     test_id = 3
-    resp = init_client.delete('/items/' + str(test_id), headers={"AUTHORIZATION": token})
+    resp = init_client.delete(f'/items/{test_id}', headers={'AUTHORIZATION': token})
     assert resp.status_code == 200
     assert not resp.get_json()
