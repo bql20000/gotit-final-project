@@ -65,5 +65,9 @@ The application is now available at local host: <code>http://127.0.0.1:5000</cod
 
 ## Testing
 - [Postman](https://www.postman.com): You can use postman to create custom requests to our local host.
-- [Pytest](https://docs.pytest.org/en/stable/): I wrote several tests in the <code>tests</code> folder. You can write some test by your own, there are functions in <code>helpers.py</code> may help you simplify the work. After that, run this command to obtain the testing results:
+- [Pytest](https://docs.pytest.org/en/stable/): I wrote several tests in the <code>tests</code> folder. You can write some test by your own, there are functions in <code>helpers.py</code> may help you simplify the work. But first, let's switch to testing environment:
+> export FLASK_ENV=testing
+>
+After that, run this command to obtain the testing results:
 > $ pytest --cov=tests
+>
