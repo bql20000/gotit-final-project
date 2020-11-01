@@ -19,7 +19,7 @@ def create_app():
     else:
         app.config.from_object('config.TestingConfig')
 
-    print("DATABASE:", app.config['SQLALCHEMY_DATABASE_URI'])
+    # print("DATABASE:", app.config['SQLALCHEMY_DATABASE_URI'])
 
     register_extensions(app)
 
