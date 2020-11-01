@@ -1,25 +1,26 @@
 from flask import Flask
 
-from app.models.UserModel import UserModel
-from app.controllers import user, item
-from app.extensions import db
+from app.extensions import db, hashing
+
+
+def register_extensions(app):
+    """Register the application with needed extensions."""
+    hashing.init_app(app)
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
 
 
 def create_app():
+    """Create a flask application & config environment"""
     app = Flask(__name__)
-
     if app.config['ENV'] == 'development':
         app.config.from_object('config.DevelopmentConfig')
     else:
         app.config.from_object('config.TestingConfig')
 
-    print('DATABASE URI:', app.config['SQLALCHEMY_DATABASE_URI'])
+    # print("DATABASE:", app.config['SQLALCHEMY_DATABASE_URI'])
 
-    db.init_app(app)
-
-    app.add_url_rule('/register', view_func=user.register, methods=['POST'])
-    app.add_url_rule('/login', view_func=user.login, methods=['POST'])
-
-    app.add_url_rule('/', view_func=item.get_item, methods=['GET'])
+    register_extensions(app)
 
     return app

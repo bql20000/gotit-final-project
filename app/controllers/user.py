@@ -1,56 +1,45 @@
-import logging
+from flask import jsonify, current_app
+from werkzeug.exceptions import BadRequest
 
-from flask import request, jsonify
-from marshmallow import ValidationError
-
-from app.models.UserModel import UserModel, user_schema
-from app.extensions import db
+from app.app import app
+from app.models.user import UserModel
+from app.schemas.user import UserSchema
 from app.security import encode_jwt
+from app.extensions import hashing
+from app.helpers import load_request_data
 
 
-def register():
+@app.route('/register', methods=['POST'])
+@load_request_data(UserSchema)
+def register(data):
+    """A new user sends username & password to register."""
+
+    # check if username exists
+    if UserModel.query.filter_by(username=data.get('username')).first():
+        raise BadRequest('Username existed.')
+
+    # save user's data & response a successful message
+    user = UserModel(**data)
+    user.save_to_db()
+    return jsonify(UserSchema(exclude=("password",)).dump(user)), 201
+
+
+@app.route('/login', methods=['POST'])
+@load_request_data(UserSchema)
+def login(data):
+    """User sends username & password to login.
+    :return: successful message & JWT
     """
-        Docs ...
-    """
-    data = request.get_json()
-    if UserModel.find_by_username(data['username']):
-        return jsonify({'message': 'Username existed, please choose another username.'}), 400
-    try:
-        user = user_schema.load(data)
-        db.session.add(user)
-        db.session.commit()
-        return jsonify({'message': 'User registers successfully!'}), 201
-    except ValidationError as err:
-        return jsonify(err.messages), 400
 
+    # find users from database
+    user = UserModel.query.filter_by(
+        username=data.get('username'),
+        password=hashing.hash_value(data.get('password'), current_app.config['HASHING_SALT'])
+    ).first()
 
-def login():
-    data = request.get_json()
-    try:
-        user = UserModel.query.filter_by(
-            username=data.get('username'),
-            password=data.get('password')
-        ).one()
+    if user is None:
+        raise BadRequest('Wrong username or password.')
 
-        jwt_token = encode_jwt(user.id)
-        if isinstance(jwt_token, Exception):
-            response = {
-                'status': 'fail',
-                'message': 'Server error.'
-            }
-            return jsonify(response), 500
-        else:
-            response = {
-                'status': 'success',
-                'message': 'Successfully logged in.',
-                'jwt_token': jwt_token.decode()
-            }
-            return jsonify(response), 200
-    except Exception as e:
-        logging.exception("Exception")
-        response = {
-            'status': 'fail',
-            'message': 'Wrong username or password. Please try again.'
-        }
-        return jsonify(response), 400
-
+    # generate jwt & response to client
+    jwt_token = encode_jwt(user.id)
+    return jsonify(jwt_token=jwt_token.decode()), 200
