@@ -18,7 +18,7 @@ def test_register(init_client, init_db):
     # username & password length < 4
     resp = register_demo(init_client, 'lon', '123')
     assert resp.status_code == 400
-    resp.get_json()['message'] = 'Invalid request data.'
+    assert resp.get_json()['message'] == 'Invalid request data.'
     assert resp.get_json()['error_info']['username'][0] == 'Length must be between 4 and 32.'
     assert resp.get_json()['error_info']['password'][0] == 'Length must be between 4 and 32.'
 
@@ -27,7 +27,7 @@ def test_register(init_client, init_db):
     long_password = '1' * 33
     resp = register_demo(init_client, long_name, long_password)
     assert resp.status_code == 400
-    resp.get_json()['message'] = 'Invalid request data.'
+    assert resp.get_json()['message'] == 'Invalid request data.'
     assert resp.get_json()['error_info']['username'][0] == 'Length must be between 4 and 32.'
 
     # username & password length = 32
@@ -35,7 +35,33 @@ def test_register(init_client, init_db):
     long_password = '1' * 32
     resp = register_demo(init_client, long_name, long_password)
     assert resp.status_code == 201
-    resp.get_json()['username'] = long_name
+    assert resp.get_json()['username'] == long_name
+
+    # username has special characters @
+    resp = register_demo(init_client, 'long@', '1233')
+    assert resp.status_code == 400
+    assert resp.get_json()['message'] == 'Invalid request data.'
+    assert resp.get_json()['error_info']['username'][0] == \
+           'Username must not contain special characters (except _ and -).'
+
+    # username has special characters ^
+    resp = register_demo(init_client, 'long^', '1233')
+    assert resp.status_code == 400
+    assert resp.get_json()['message'] == 'Invalid request data.'
+    assert resp.get_json()['error_info']['username'][0] == \
+           'Username must not contain special characters (except _ and -).'
+
+    # username has special characters ' '
+    resp = register_demo(init_client, 'long ', '1233')
+    assert resp.status_code == 400
+    assert resp.get_json()['message'] == 'Invalid request data.'
+    assert resp.get_json()['error_info']['username'][0] == \
+           'Username must not contain special characters (except _ and -).'
+
+    # username has '_' and '-' (allowed characters)
+    resp = register_demo(init_client, 'long-_', '1233')
+    assert resp.status_code == 201
+    assert resp.get_json()['username'] == 'long-_'
 
 
 def test_login(init_client, init_db):
