@@ -28,12 +28,12 @@ All the required packages have been listed in <code>requirements.txt</code>. In 
 > $ pip install -r requirements.txt
 >
 Some of the main packages you might want to have a look at:
-- [Flask](): Mircro web framework
-- [Flask-SQLALchemy](): Object-raltional mapping
+- [Flask](https://flask.palletsprojects.com/en/1.1.x/): Mircro web framework
+- [Flask-SQLALchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/): Object-raltional mapping
 - [pyJWT](https://pyjwt.readthedocs.io/en/latest/): Encode and decode the JSON Web Token. 
-- [marshmallow](): Validate request data
-- [flask-hashing](): Hash user's password
-- [pytest](): Test the application 
+- [marshmallow](https://marshmallow.readthedocs.io/en/stable/): Validate request data
+- [flask-hashing](https://flask-hashing.readthedocs.io/en/latest/): Hash user's password
+- [pytest](https://docs.pytest.org/en/stable/): Test the application 
 
 #### 5. Setting up SQL server
 In Mac OS, turn on MySQL Server in **System Preferences**. Now we need to create 2 database **catalog** and **catalog_test** for *development* environment and *testing* environment respectively. This can be done by logging in to the MySQL server, then open a WorkBench Query Tab and execute the following statement:
