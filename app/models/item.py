@@ -28,6 +28,3 @@ class ItemModel(db.Model, TimestampMixin):
         db.session.delete(self)
         db.session.commit()
 
-    def update_to_db(self, data):
-        self.query.filter_by(id=self.id).update(data)
-        db.session.commit()
