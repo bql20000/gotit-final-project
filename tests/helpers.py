@@ -18,7 +18,7 @@ def init_categories():
 def init_items():
     """Create 4 sample items, 2 for each sample user and category."""
     ItemModel('ball', 'A ball', 1, 1).save_to_db()
-    ItemModel('grass', "Some grass", 1, 1).save_to_db()
+    ItemModel('grass', 'Some grass', 1, 1).save_to_db()
     ItemModel('racket', "A racket", 2, 2).save_to_db()
     ItemModel('net', "A ", 2, 2).save_to_db()
 
@@ -55,7 +55,6 @@ def create_item_demo(client, token, name, description, category_id):
     """Return a response object received by the client after making a
     HTTP post request to create an item.
     """
-
     return client.post('/items',
                        json={'name': name,
                              'description': description,
@@ -68,9 +67,8 @@ def update_item_demo(client, token, item_id, name, description, category_id):
     """Return a response object received by the client after making a
     HTTP put request to update an item.
     """
-
     return client.put(f'/items/{item_id}',
-                      json={"name": name,
+                      json={'name': name,
                             'description': description,
                             'category_id': category_id},
                       headers={'AUTHORIZATION': token}
@@ -83,7 +81,6 @@ def request_page_demo(client, category_id, page_number, items_per_page):
     The item list is determined by page_number & items_per_page provided
     by the client.
     """
-
     return client.post(f'/categories/{category_id}/items',
                        json={'page_number': page_number,
                              'items_per_page': items_per_page})
