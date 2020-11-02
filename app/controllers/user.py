@@ -15,7 +15,7 @@ def register(data):
     """A new user sends username & password to register."""
 
     # check if username exists
-    if UserModel.query.filter_by(username=data.get('username')).first():
+    if UserModel.query.filter_by(username=data['username']).first():
         raise BadRequest('Username existed.')
 
     # save user's data & response a successful message
@@ -33,8 +33,8 @@ def login(data):
 
     # find users from database
     user = UserModel.query.filter_by(
-        username=data.get('username'),
-        password=hashing.hash_value(data.get('password'), current_app.config['HASHING_SALT'])
+        username=data['username'],
+        password=hashing.hash_value(data['password'], current_app.config['HASHING_SALT'])
     ).first()
 
     if user is None:
