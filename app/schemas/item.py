@@ -16,4 +16,7 @@ class ItemSchema(Schema):
     description = fields.Str(required=True, validate=validate.Length(max=255))
     category_id = fields.Integer(required=True, validate=validate_category_id)
     user_id = fields.Integer()
+    created = fields.Str()
+    updated = fields.Str()
+
 

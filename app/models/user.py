@@ -1,9 +1,10 @@
 from flask import current_app
 
 from app.extensions import db, hashing
+from app.models.timestamp_mixin import TimestampMixin
 
 
-class UserModel(db.Model):
+class UserModel(db.Model, TimestampMixin):
     """The user model"""
 
     __tablename__ = 'user'

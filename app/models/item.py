@@ -1,7 +1,8 @@
 from app.extensions import db
+from app.models.timestamp_mixin import TimestampMixin
 
 
-class ItemModel(db.Model):
+class ItemModel(db.Model, TimestampMixin):
     """The item model"""
 
     __tablename__ = 'item'

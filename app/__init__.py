@@ -1,6 +1,9 @@
 from flask import Flask
 
 from app.extensions import db, hashing
+from app.models.item import ItemModel
+from app.models.user import UserModel
+from app.models.category import CategoryModel
 
 
 def register_extensions(app):
@@ -9,6 +12,7 @@ def register_extensions(app):
     db.init_app(app)
     with app.app_context():
         db.create_all()
+        db.session.commit()
 
 
 def create_app():

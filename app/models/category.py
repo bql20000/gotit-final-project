@@ -1,7 +1,8 @@
 from app.extensions import db
+from app.models.timestamp_mixin import TimestampMixin
 
 
-class CategoryModel(db.Model):
+class CategoryModel(db.Model, TimestampMixin):
     """The category model"""
 
     __tablename__ = 'category'
