@@ -4,15 +4,15 @@ from tests.helpers import login_demo, create_item_demo, request_page_demo
 def test_request_page(init_client, init_db):
     """Request a page specified by 2 parameters: page_number and items_per_page.
 
-    After testing at test_item, category 1 has 4 items, category 1 has 2 items.
+    After testing at test_item, category 1 has 5 items, category 2 has 2 items.
     Check total number of items by the followings:
         from app.models.item import ItemModel
         print(len(ItemModel.query.all()))
     """
 
-    # add 6 items for category 1 (soccer) --> category soccer has 10 items in total
+    # add 5 items for category 1 (soccer) --> category soccer has 10 items in total
     token = login_demo(init_client, 'long', '1234').get_json()['jwt_token']
-    for i in range(6):
+    for i in range(5):
         create_item_demo(init_client, token, f'new_item{i}', 'some_description', 1)
 
     category_id = 1

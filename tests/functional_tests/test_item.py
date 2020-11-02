@@ -41,10 +41,10 @@ def test_create_item(init_client, init_db):
     assert resp.status_code == 401
     assert resp.get_json()['message'] == 'Invalid token. Please log in again.'
 
-    # 400 - Item name existed
-    resp = create_item_demo(init_client, token, 'ball', test_description, test_category_id)
+    # 400 - Item name existed in the category
+    resp = create_item_demo(init_client, token, 'racket', test_description, category_id=2)
     assert resp.status_code == 400
-    assert resp.get_json()['message'] == 'Item ball existed.'
+    assert resp.get_json()['message'] == 'This category has already had item racket.'
 
     # 400 - First name character is a number
     resp = create_item_demo(init_client, token, '1ball', test_description, test_category_id)
@@ -91,6 +91,15 @@ def test_create_item(init_client, init_db):
     assert resp.get_json()['description'] == test_description
     assert resp.get_json()['user_id'] == 2      # user long has id = 2
 
+    # 200 - Duplicated item name, but different category
+    test_name = 'racket'
+    resp = create_item_demo(init_client, token, test_name, test_description, category_id=1)
+    assert resp.status_code == 201
+    assert resp.get_json()['id'] == 7  # after 4 sample items + 2 above items
+    assert resp.get_json()['name'] == test_name
+    assert resp.get_json()['description'] == test_description
+    assert resp.get_json()['user_id'] == 2
+
 
 def test_update_item(init_client, init_db):
     """Test updating an item by its id in different scenarios."""
@@ -115,16 +124,16 @@ def test_update_item(init_client, init_db):
     assert resp.status_code == 403
     assert resp.get_json()['message'] == 'You are not allowed to modify this item.'
 
-    # 400 - new item's name already exists
+    # 400 - new item's name already exists in category with id = category_id
     test_name = 'grass'
     test_id = 3
-    resp = update_item_demo(init_client, token, test_id, test_name, test_description, test_category_id)
+    resp = update_item_demo(init_client, token, test_id, test_name, test_description, category_id=1)
     assert resp.status_code == 400
-    assert resp.get_json()['message'] == 'Item grass existed.'
+    assert resp.get_json()['message'] == f'This category has already had item {test_name}.'
 
-    # 200 - successful
-    test_name = 'racket'
-    test_description = 'An updated racket'
+    # 200 - successful & duplicate item name but different category
+    test_name = 'grass'
+    test_description = 'racket to grass'
     test_id = 3
     test_category_id = 2
     resp = update_item_demo(init_client, token, test_id, test_name, test_description, test_category_id)
