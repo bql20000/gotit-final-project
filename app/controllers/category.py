@@ -30,8 +30,8 @@ def create_category(data):
     """Create a new category."""
 
     # check if new category's name has existed."
-    if CategoryModel.query.filter_by(name=data.get('name')).first():
-        raise BadRequest(f"Category {data.get('name')} existed.")
+    if CategoryModel.query.filter_by(name=data['name']).first():
+        raise BadRequest(f"Category {data['name']} existed.")
 
     # save category to database & response to client
     category = CategoryModel(**data)

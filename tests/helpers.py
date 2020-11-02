@@ -19,7 +19,7 @@ def init_items():
     """Create 4 sample items, 2 for each sample user and category."""
     ItemModel('ball', 'A ball', 1, 1).save_to_db()
     ItemModel('grass', 'Some grass', 1, 1).save_to_db()
-    ItemModel('racket', "A racket", 2, 2).save_to_db()
+    ItemModel('racket', 'A racket', 2, 2).save_to_db()
     ItemModel('net', "A ", 2, 2).save_to_db()
 
 
