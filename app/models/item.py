@@ -12,8 +12,6 @@ class ItemModel(db.Model):
     # items table has 2 foreign keys referencing users & categories table
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # category = db.relationship('CategoryModel')
-    # user = db.relationship('UserModel')
 
     def __init__(self, name, description, category_id, user_id):
         self.name = name

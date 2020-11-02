@@ -3,6 +3,7 @@ from werkzeug.exceptions import BadRequest
 
 from app.app import app
 from app.models.category import CategoryModel
+from app.models.item import ItemModel
 from app.schemas.item import ItemSchema
 from app.schemas.page import PageSchema
 from app.schemas.category import CategorySchema
@@ -49,19 +50,16 @@ def get_all_items_in_category(idx, data):
     """
 
     # set params as default if not provided
-    page_number = data.get('page_number') if data.get('page_number') else 1
-    items_per_page = data.get('items_per_page') if data.get('items_per_page') else 2
+    page_number = data.get('page_number', 1)
+    items_per_page = data.get('items_per_page', 2)
 
     # check if category with id = idx exists
-    category = validate_category_id(idx)
+    validate_category_id(idx)
 
-    total_items = len(category.items)
-    total_pages = total_items // items_per_page + (total_items % items_per_page > 0)
-    first_item_number = items_per_page * (page_number - 1)
-    last_item_number = items_per_page * page_number     # exclusive
+    result_page = ItemModel.query.filter_by(category_id=idx).paginate(page_number, items_per_page, False)
 
-    return jsonify(total_items=total_items,
+    return jsonify(total_items=result_page.total,
                    current_page=page_number,
                    items_per_page=items_per_page,
-                   total_pages=total_pages,
-                   items=ItemSchema(many=True).dump(category.items[first_item_number:last_item_number])), 200
+                   total_pages=result_page.pages,
+                   items=ItemSchema(many=True).dump(result_page.items)), 200
