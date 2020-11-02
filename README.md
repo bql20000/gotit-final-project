@@ -69,5 +69,5 @@ The application is now available at local host: <code>http://127.0.0.1:5000</cod
 > export FLASK_ENV=testing
 >
 After that, run this command to obtain the testing results:
-> $ pytest --cov=tests
+> $ pytest --cov=app
 >
