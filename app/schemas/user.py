@@ -1,16 +1,7 @@
-import typing
+from marshmallow import Schema, fields
+from marshmallow.validate import Length, Regexp
 
-from marshmallow import Schema, fields, validate, ValidationError
-from marshmallow.validate import Validator, Length, Regexp
-
-
-class FirstChar(Validator):
-    error = 'First character must not be a number.'
-
-    def __call__(self, value) -> typing.Any:
-        if value and '9' >= value[0] >= '0':
-            raise ValidationError(FirstChar.error)
-        return value
+from app.schemas.validators import FirstCharNotNum
 
 
 class UserSchema(Schema):
@@ -19,9 +10,9 @@ class UserSchema(Schema):
                                     Regexp(r'[a-zA-Z0-9_]*$',
                                            error='Username must not contain '
                                                  'special characters (except _).'),
-                                    FirstChar()
+                                    FirstCharNotNum()
                                     ]
                           )
-    password = fields.Str(required=True, validate=validate.Length(min=4, max=32))
+    password = fields.Str(required=True, validate=Length(min=4, max=32))
     created = fields.Str()
     updated = fields.Str()

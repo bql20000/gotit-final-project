@@ -7,7 +7,7 @@ class ItemModel(db.Model, TimestampMixin):
 
     __tablename__ = 'item'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32), unique=True)
+    name = db.Column(db.String(32))
     description = db.Column(db.String(255))
 
     # items table has 2 foreign keys referencing users & categories table

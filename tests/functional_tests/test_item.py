@@ -46,6 +46,12 @@ def test_create_item(init_client, init_db):
     assert resp.status_code == 400
     assert resp.get_json()['message'] == 'Item ball existed.'
 
+    # 400 - First name character is a number
+    resp = create_item_demo(init_client, token, '1ball', test_description, test_category_id)
+    assert resp.status_code == 400
+    assert resp.get_json()['message'] == 'Invalid request data.'
+    assert resp.get_json()['error_info']['name'][0] == 'First character must not be a number.'
+
     # 400 - Item name length = 0 && description length > 255
     test_name = ''
     test_description = 'a' * 256
