@@ -52,6 +52,13 @@ def test_create_item(init_client, init_db):
     assert resp.get_json()['message'] == 'Invalid request data.'
     assert resp.get_json()['error_info']['name'][0] == 'First character must not be a number.'
 
+    # 400 - Item name has special characters
+    resp = create_item_demo(init_client, token, 'b@ll', test_description, test_category_id)
+    assert resp.status_code == 400
+    assert resp.get_json()['message'] == 'Invalid request data.'
+    assert resp.get_json()['error_info']['name'][0] == \
+           'Item name must not contain special characters (except _).'
+
     # 400 - Item name length = 0 && description length > 255
     test_name = ''
     test_description = 'a' * 256

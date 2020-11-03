@@ -24,6 +24,14 @@ def test_create_category(init_client, init_db):
     assert resp.get_json()['message'] == 'Invalid request data.'
     assert resp.get_json()['error_info']['name'][0] == 'First character must not be a number.'
 
+    # 400 - category name contains special characters
+    test_name = 'av&x'
+    resp = create_category_demo(init_client, test_name)
+    assert resp.status_code == 400
+    assert resp.get_json()['message'] == 'Invalid request data.'
+    assert resp.get_json()['error_info']['name'][0] == \
+           'Category name must not contain special characters (except _).'
+
     # 400 - category name length = 0
     test_name = ''
     resp = create_category_demo(init_client, test_name)
