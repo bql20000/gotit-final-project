@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, request
 from werkzeug.exceptions import BadRequest
 
 from app.app import app
@@ -39,9 +39,8 @@ def create_category(data):
     return jsonify(CategorySchema().dump(category)), 201
 
 
-@app.route('/categories/<int:idx>/items', methods=['POST'])
-@load_request_data(PageSchema)
-def get_all_items_in_category(idx, data):
+@app.route('/categories/<int:idx>/items', methods=['GET'])
+def get_all_items_in_category(idx):
     """ Return all items in 1 page of the category with id = idx.
 
     The item page is specified by 2 fields in the post request:
@@ -50,8 +49,10 @@ def get_all_items_in_category(idx, data):
     """
 
     # set params as default if not provided
-    page_number = data.get('page_number', 1)
-    items_per_page = data.get('items_per_page', 2)
+    page_number = int(request.args.get('page_number', 1))
+    items_per_page = int(request.args.get('items_per_page', 2))
+
+    PageSchema().load(request.args)
 
     # check if category with id = idx exists
     validate_category_id(idx)

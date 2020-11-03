@@ -81,7 +81,6 @@ def request_page_demo(client, category_id, page_number, items_per_page):
     The item list is determined by page_number & items_per_page provided
     by the client.
     """
-    return client.post(f'/categories/{category_id}/items',
-                       json={'page_number': page_number,
-                             'items_per_page': items_per_page})
+    return client.get(f'/categories/{category_id}/items?page_number={page_number}&items_per_page={items_per_page}')
+
 
