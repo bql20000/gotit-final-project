@@ -9,7 +9,7 @@ from app.models.category import CategoryModel
 class FirstCharNotNum(Validator):
     error = 'First character must not be a number.'
 
-    def __call__(self, value) -> typing.Any:
+    def __call__(self, value) -> typing.Any:    #
         if value and '9' >= value[0] >= '0':
             raise ValidationError(FirstCharNotNum.error)
         return value

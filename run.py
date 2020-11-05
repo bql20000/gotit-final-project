@@ -1,7 +1,4 @@
-from app.controllers.user import *
-from app.controllers.category import *
-from app.controllers.item import *
+from app import app
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
-
+    app.run(port=5000)      # app

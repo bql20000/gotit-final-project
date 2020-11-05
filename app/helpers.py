@@ -17,7 +17,7 @@ def load_request_data(schema):
     def wrapper(func):
         @wraps(func)
         def decorated_func(*args, **kwargs):
-            data = schema().load(request.get_json())
+            data = schema().load(request.get_json())    #
             return func(data=data, *args, **kwargs)
 
         return decorated_func
@@ -39,10 +39,9 @@ def validate_item_id(idx):
     return item
 
 
-def validate_category_id(idx):
+def validate_category_id(idx):  #
     """Return the category object with id = {idx} or None if not exist."""
     category = CategoryModel.query.get(idx)
     if category is None:
         raise NotFound(f'Category with id {idx} not found.')
     return category
-

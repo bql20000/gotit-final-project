@@ -16,7 +16,7 @@ class UserModel(db.Model, TimestampMixin):
 
     def __init__(self, username, password):
         self.username = username
-        self.password = hashing.hash_value(password, current_app.config['HASHING_SALT'])
+        self.password = hashing.hash_value(password, current_app.config['HASHING_SALT'])  #
 
     def save_to_db(self):
         db.session.add(self)

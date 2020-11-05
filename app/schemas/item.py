@@ -5,7 +5,7 @@ from app.schemas.validators import CategoryExists, FirstCharNotNum
 
 
 class ItemSchema(Schema):
-    id = fields.Integer()
+    id = fields.Int()
     name = fields.Str(required=True, validate=[Length(min=1, max=32),
                                                FirstCharNotNum(),
                                                Regexp(r'[a-zA-Z0-9_]*$',
@@ -13,8 +13,8 @@ class ItemSchema(Schema):
                                                             'special characters (except _).')
                                                ])
     description = fields.Str(required=True, validate=Length(max=255))
-    category_id = fields.Integer(required=True, validate=CategoryExists())
-    user_id = fields.Integer()
+    category_id = fields.Int(required=True, validate=CategoryExists())
+    user_id = fields.Int()
     created = fields.Str()
     updated = fields.Str()
 

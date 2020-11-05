@@ -1,7 +1,7 @@
 from tests.helpers import login_demo, create_item_demo, update_item_demo
+#functional
 
-
-def test_get_item_by_id(init_client, init_db):
+def test_get_item_by_id(init_client, init_db):  # name # warning
     """Test getting an item by its id in different scenarios."""
     test_id = 1
     resp = init_client.get(f'/items/{test_id}')

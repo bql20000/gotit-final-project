@@ -1,4 +1,3 @@
-import logging
 import datetime
 from functools import wraps
 
@@ -17,11 +16,7 @@ def encode_jwt(user_id):
         'iat': datetime.datetime.utcnow(),
         'sub': user_id
     }
-    return jwt.encode(
-        payload,
-        current_app.config.get('SECRET_KEY'),
-        algorithm='HS256'
-    )
+    return jwt.encode(payload, current_app.config.get('SECRET_KEY'), algorithm='HS256')
 
 
 def requires_auth(func):

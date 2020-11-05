@@ -1,7 +1,7 @@
 from flask import jsonify
 from werkzeug.exceptions import BadRequest
 
-from app.app import app
+from app import app
 from app.security import requires_auth
 from app.schemas.item import ItemSchema
 from app.models.item import ItemModel
@@ -46,12 +46,12 @@ def update_item(idx, data, user_id):
 
     # check if item's new title has already existed
     item_by_name = ItemModel.query.filter_by(name=data['name'],
-                                             category_id=data['category_id']).first()
+                                             category_id=data['category_id']).first()       #
     if item_by_name and item_by_name.id != idx:
         raise BadRequest(f"This category has already had item {data['name']}.")
 
     # updated item & response back to client
-    ItemModel.query.filter_by(id=idx).update(data)
+    ItemModel.query.filter_by(id=idx).update(data)      # other way?
     db.session.commit()
 
     return jsonify(ItemSchema().dump(item)), 200

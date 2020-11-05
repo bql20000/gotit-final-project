@@ -1,7 +1,7 @@
 from flask import jsonify, current_app
 from werkzeug.exceptions import BadRequest
 
-from app.app import app
+import app.app
 from app.models.user import UserModel
 from app.schemas.user import UserSchema
 from app.security import encode_jwt
@@ -21,7 +21,7 @@ def register(data):
     # save user's data & response a successful message
     user = UserModel(**data)
     user.save_to_db()
-    return jsonify(UserSchema(exclude=("password",)).dump(user)), 201
+    return jsonify(UserSchema(exclude=('password',)).dump(user)), 201
 
 
 @app.route('/login', methods=['POST'])

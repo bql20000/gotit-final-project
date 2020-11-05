@@ -1,4 +1,4 @@
-import os
+import os   #local
 
 dev_key = os.urandom(24)
 test_key = os.urandom(24)
