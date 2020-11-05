@@ -1,6 +1,6 @@
-from app.models.user import UserModel
-from app.models.category import CategoryModel
-from app.models.item import ItemModel
+from flaskr.models.user import UserModel
+from flaskr.models.category import CategoryModel
+from flaskr.models.item import ItemModel
 
 
 def init_users():

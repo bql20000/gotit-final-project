@@ -1,4 +1,4 @@
-from app.models.category import CategoryModel
+from flaskr.models.category import CategoryModel
 from tests.helpers import create_category_demo
 
 

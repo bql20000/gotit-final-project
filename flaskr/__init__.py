@@ -4,10 +4,10 @@ from flask import Flask, jsonify
 from marshmallow import ValidationError
 from werkzeug.exceptions import HTTPException
 
-from app.extensions import db, hashing
-from app.models.item import ItemModel
-from app.models.user import UserModel
-from app.models.category import CategoryModel
+from flaskr.extensions import db, hashing
+from flaskr.models.item import ItemModel
+from flaskr.models.user import UserModel
+from flaskr.models.category import CategoryModel
 
 
 def register_extensions(app):
@@ -50,6 +50,7 @@ def create_app():
 
 app = create_app()
 
-import app.controllers.user
-import app.controllers.item
-import app.controllers.category
+import flaskr.controllers.user
+import flaskr.controllers.category
+import flaskr.controllers.item
+

@@ -1,12 +1,12 @@
 from flask import jsonify, current_app
 from werkzeug.exceptions import BadRequest
 
-import app.app
-from app.models.user import UserModel
-from app.schemas.user import UserSchema
-from app.security import encode_jwt
-from app.extensions import hashing
-from app.helpers import load_request_data
+from flaskr import app
+from flaskr.models.user import UserModel
+from flaskr.schemas.user import UserSchema
+from flaskr.security import encode_jwt
+from flaskr.extensions import hashing
+from flaskr.helpers import load_request_data
 
 
 @app.route('/register', methods=['POST'])

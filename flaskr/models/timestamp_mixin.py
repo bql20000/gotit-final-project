@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from app.extensions import db
+from flaskr.extensions import db
 
 
 class TimestampMixin(object):

@@ -6,7 +6,7 @@ def test_request_page(init_client, init_db):
 
     After testing at test_item, category 1 has 5 items, category 2 has 2 items.
     Check total number of items by the followings:
-        from app.models.item import ItemModel
+        from flaskr.models.item import ItemModel
         print(len(ItemModel.query.all()))
     """
 

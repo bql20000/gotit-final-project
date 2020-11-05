@@ -1,5 +1,5 @@
-from app.extensions import db
-from app.models.timestamp_mixin import TimestampMixin
+from flaskr.extensions import db
+from flaskr.models.timestamp_mixin import TimestampMixin
 
 
 class ItemModel(db.Model, TimestampMixin):

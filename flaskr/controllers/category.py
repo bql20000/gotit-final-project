@@ -1,13 +1,13 @@
 from flask import jsonify, request
 from werkzeug.exceptions import BadRequest
 
-from app import app
-from app.models.category import CategoryModel
-from app.models.item import ItemModel
-from app.schemas.item import ItemSchema
-from app.schemas.page import PageSchema
-from app.schemas.category import CategorySchema
-from app.helpers import validate_category_id, load_request_data
+from flaskr import app
+from flaskr.models.category import CategoryModel
+from flaskr.models.item import ItemModel
+from flaskr.schemas.item import ItemSchema
+from flaskr.schemas.page import PageSchema
+from flaskr.schemas.category import CategorySchema
+from flaskr.helpers import validate_category_id, load_request_data
 
 
 @app.route('/categories', methods=['GET'])

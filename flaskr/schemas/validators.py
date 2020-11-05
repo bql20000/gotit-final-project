@@ -3,7 +3,7 @@ import typing
 from marshmallow.validate import Validator
 from marshmallow import ValidationError
 
-from app.models.category import CategoryModel
+from flaskr.models.category import CategoryModel
 
 
 class FirstCharNotNum(Validator):

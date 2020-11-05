@@ -1,7 +1,7 @@
 import pytest
 
-from app.extensions import db
-import app.controllers.user  # an application has been created from this
+from flaskr.extensions import db
+from flaskr import app
 from tests.helpers import create_db_samples
 
 
