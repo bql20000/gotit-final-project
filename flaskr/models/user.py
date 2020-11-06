@@ -1,5 +1,3 @@
-from flask import current_app
-
 from flaskr.extensions import db, hashing
 from flaskr.models.timestamp_mixin import TimestampMixin
 
@@ -16,7 +14,7 @@ class UserModel(db.Model, TimestampMixin):
 
     def __init__(self, username, password):
         self.username = username
-        self.password = hashing.hash_value(password, current_app.config['HASHING_SALT'])  #
+        self.password = hashing.hash_value(password)
 
     def save_to_db(self):
         db.session.add(self)

@@ -40,8 +40,8 @@ def create_category(data):
 
 
 @app.route('/categories/<int:idx>/items', methods=['GET'])
-# load?
-def get_all_items_in_category(idx):     #
+@load_request_data(PageSchema)
+def get_items_in_category(idx, data):
     """ Return all items in 1 page of the category with id = idx.
 
     The item page is specified by 2 fields in the post request:
@@ -50,10 +50,8 @@ def get_all_items_in_category(idx):     #
     """
 
     # set params as default if not provided
-    page_number = int(request.args.get('page_number', 1))
-    items_per_page = int(request.args.get('items_per_page', 2))
-
-    PageSchema().load(request.args) # order?
+    page_number = int(data.get('page_number', 1))
+    items_per_page = int(data.get('items_per_page', 2))
 
     # check if category with id = idx exists
     validate_category_id(idx)

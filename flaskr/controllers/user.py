@@ -1,4 +1,4 @@
-from flask import jsonify, current_app
+from flask import jsonify
 from werkzeug.exceptions import BadRequest
 
 from flaskr import app
@@ -34,7 +34,7 @@ def login(data):
     # find users from database
     user = UserModel.query.filter_by(
         username=data['username'],
-        password=hashing.hash_value(data['password'], current_app.config['HASHING_SALT'])
+        password=hashing.hash_value(data['password'])
     ).first()
 
     if user is None:

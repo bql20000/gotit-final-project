@@ -17,11 +17,10 @@ def load_request_data(schema):
     def wrapper(func):
         @wraps(func)
         def decorated_func(*args, **kwargs):
-            data = schema().load(request.get_json())    #
+            data = schema().load(request.args) if request.method == 'GET' \
+                else schema().load(request.get_json())
             return func(data=data, *args, **kwargs)
-
         return decorated_func
-
     return wrapper
 
 
