@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify
 from werkzeug.exceptions import BadRequest
 
 from flaskr import app
@@ -49,14 +49,14 @@ def get_items_in_category(idx, data):
         items_per_page (default=2): the items in each page
     """
 
+    # check if category with id = idx exists
+    category = validate_category_id(idx)
+
     # set params as default if not provided
     page_number = int(data.get('page_number', 1))
     items_per_page = int(data.get('items_per_page', 2))
 
-    # check if category with id = idx exists
-    validate_category_id(idx)
-
-    result_page = ItemModel.query.filter_by(category_id=idx).paginate(page_number, items_per_page, False)
+    result_page = category.items.paginate(page_number, items_per_page, False)
 
     return jsonify(total_items=result_page.total,
                    current_page=page_number,

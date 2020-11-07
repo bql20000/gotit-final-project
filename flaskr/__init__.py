@@ -18,10 +18,13 @@ def register_extensions(app):
 def create_app():
     """Create a flask application & config environment"""
     app = Flask(__name__)
+
     if app.config['ENV'] == 'development':
         app.config.from_object('config.development.DevelopmentConfig')
-    else:
+    elif app.config['ENV'] == 'testing':
         app.config.from_object('config.testing.TestingConfig')
+    else:
+        raise Exception('Unknown environment.')
 
     register_extensions(app)
 

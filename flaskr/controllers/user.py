@@ -41,5 +41,4 @@ def login(data):
         raise BadRequest('Wrong username or password.')
 
     # generate jwt & response to client
-    jwt_token = encode_jwt(user.id)
-    return jsonify(access_token=jwt_token.decode(), token_type='Bearer'), 200
+    return jsonify(access_token=encode_jwt(user.id), token_type='Bearer'), 200

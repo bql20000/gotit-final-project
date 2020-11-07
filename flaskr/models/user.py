@@ -10,8 +10,6 @@ class UserModel(db.Model, TimestampMixin):
     username = db.Column(db.String(32), unique=True)
     password = db.Column(db.String(64))     # length of SHA-256 hash value
 
-    items = db.relationship('ItemModel')
-
     def __init__(self, username, password):
         self.username = username
         self.password = hashing.hash_value(password)

@@ -22,8 +22,10 @@ def get_item(idx):
 def create_item(data, user_id):
     """Create a new item, save to database and response it."""
 
-    # check if item's title has already existed
-    if ItemModel.query.filter_by(name=data['name'], category_id=data['category_id']).first():
+    # check if item's name has already existed in this category
+    if ItemModel.query.filter_by(name=data['name'],
+                                 category_id=data['category_id']
+                                 ).first():
         raise BadRequest(f"This category has already had item {data['name']}.")
 
     # save item to database and response
@@ -44,10 +46,11 @@ def update_item(idx, data, user_id):
     # check if the updater is the item's owner
     validate_ownership(item, user_id)
 
-    # check if item's new title has already existed
-    item_by_name = ItemModel.query.filter_by(name=data['name'],
-                                             category_id=data['category_id']).first()       #
-    if item_by_name and item_by_name.id != idx:
+    # check if item's new name has already existed in this category
+    existed_item = ItemModel.query.filter_by(name=data['name'],
+                                             category_id=data['category_id']
+                                             ).first()
+    if existed_item and existed_item.id != idx:
         raise BadRequest(f"This category has already had item {data['name']}.")
 
     # updated item & response back to client
@@ -70,4 +73,3 @@ def delete_item(idx, user_id):
     # delete the item & response a message
     item.delete_from_db()
     return jsonify({}), 200
-

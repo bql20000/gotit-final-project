@@ -1,3 +1,5 @@
+from flask_sqlalchemy import BaseQuery
+
 from flaskr.extensions import db
 from flaskr.models.timestamp_mixin import TimestampMixin
 
@@ -9,7 +11,7 @@ class CategoryModel(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True)
 
-    items = db.relationship('ItemModel')  #
+    items = db.relationship('ItemModel',  lazy='dynamic')
 
     def __init__(self, name):
         self.name = name
