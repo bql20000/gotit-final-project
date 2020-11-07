@@ -2,7 +2,8 @@ import datetime
 from functools import wraps
 
 import jwt
-from flask import jsonify, request, current_app
+from flask import request, current_app
+from werkzeug.exceptions import Unauthorized
 
 
 def encode_jwt(user_id):
@@ -22,15 +23,16 @@ def encode_jwt(user_id):
 def requires_auth(func):
     @wraps(func)
     def decorated_func(*args, **kwargs):
-        token = request.headers.get('AUTHORIZATION')
-        if not token:
-            return jsonify(message='Please log in first.'), 401
+        auth_header = request.headers.get('AUTHORIZATION')
+        if not auth_header:
+            raise Unauthorized('Please log in first.')
         try:
-            user_id = jwt.decode(token, current_app.config.get('SECRET_KEY')).get('sub')
+            access_token = auth_header[7:]  # exclude "Bearer " from "Bearer {access_token}"
+            user_id = jwt.decode(access_token, current_app.config.get('SECRET_KEY')).get('sub')
             return func(*args, user_id=user_id, **kwargs)
         except jwt.ExpiredSignatureError:
-            return jsonify(message='Signature expired. Please log in again.'), 401
+            raise Unauthorized('Signature expired. Please log in again.')
         except jwt.InvalidTokenError:
-            return jsonify(message='Invalid token. Please log in again.'), 401
+            raise Unauthorized('Invalid token. Please log in again.')
 
     return decorated_func

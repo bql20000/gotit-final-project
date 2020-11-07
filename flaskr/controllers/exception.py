@@ -21,4 +21,4 @@ def handle_exception(e):
                        ), e.code
 
     logging.exception(e)
-    return jsonify(message='Internal Server Error.'), 500
+    return jsonify(message='Internal server error.', error_info={}), 500

@@ -4,4 +4,4 @@ from config.default import DefaultConfig
 class DevelopmentConfig(DefaultConfig):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@localhost/catalog'
-    SECRET_KEY = '\xc8\xaaj\xbf\x0c\xe5\xbb\xb1\xcc\x10?\x83i\x1b\x93]\x07$\xd8\xaf\xfb\xed\xa9\x0c'
+    SECRET_KEY = '495DE9B3D0D6BB7480F90D0B373EA4438F76798DCE81337449434D78460C046A'

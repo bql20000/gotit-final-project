@@ -4,4 +4,4 @@ from config.default import DefaultConfig
 class TestingConfig(DefaultConfig):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@localhost/catalog_test'
-    SECRET_KEY = '\xc8\xaaj\xbf\x0c\xe5\xbb\xb1\xcc\x10?\x83i\x1b\x93]\x07$\xd8\xaf\xfb\xed\xa9\x0c'
+    SECRET_KEY = 'F8EFEC90F2B54C313DCEDC386A764F86C88CF45C8EB192D663A53B7B8F646CA8'

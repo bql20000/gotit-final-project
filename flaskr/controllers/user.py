@@ -42,4 +42,4 @@ def login(data):
 
     # generate jwt & response to client
     jwt_token = encode_jwt(user.id)
-    return jsonify(jwt_token=jwt_token.decode()), 200
+    return jsonify(access_token=jwt_token.decode(), token_type='Bearer'), 200
