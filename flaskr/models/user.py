@@ -8,7 +8,7 @@ class UserModel(db.Model, TimestampMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True)
-    password = db.Column(db.String(64))     # length of SHA-256 hash value
+    password = db.Column(db.CHAR(64))       # length of SHA-256 hash value
 
     def __init__(self, username, password):
         self.username = username
