@@ -1,5 +1,3 @@
-from flask_sqlalchemy import BaseQuery
-
 from flaskr.extensions import db
 from flaskr.models.timestamp_mixin import TimestampMixin
 

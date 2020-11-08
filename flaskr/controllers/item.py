@@ -9,10 +9,10 @@ from flaskr.extensions import db
 from flaskr.helpers import validate_item_id, load_request_data, validate_ownership
 
 
-@app.route('/items/<int:idx>', methods=['GET'])
-def get_item(idx):
-    """Response an item with id = idx."""
-    item = validate_item_id(idx)
+@app.route('/items/<int:item_id>', methods=['GET'])
+def get_item(item_id):
+    """Response an item with id = item_id."""
+    item = validate_item_id(item_id)
     return jsonify(ItemSchema().dump(item)), 200
 
 
@@ -34,14 +34,14 @@ def create_item(data, user_id):
     return jsonify(ItemSchema().dump(item)), 201
 
 
-@app.route('/items/<int:idx>', methods=['PUT'])
+@app.route('/items/<int:item_id>', methods=['PUT'])
 @requires_auth
 @load_request_data(ItemSchema)
-def update_item(idx, data, user_id):
+def update_item(item_id, data, user_id):
     """Update an existing item & response the updated one."""
 
     # check if the item exists
-    item = validate_item_id(idx)
+    item = validate_item_id(item_id)
 
     # check if the updater is the item's owner
     validate_ownership(item, user_id)
@@ -50,22 +50,22 @@ def update_item(idx, data, user_id):
     existed_item = ItemModel.query.filter_by(name=data['name'],
                                              category_id=data['category_id']
                                              ).first()
-    if existed_item and existed_item.id != idx:
+    if existed_item and existed_item.id != item_id:
         raise BadRequest(f"This category has already had item {data['name']}.")
 
     # updated item & response back to client
-    ItemModel.query.filter_by(id=idx).update(data)      # other way?
+    ItemModel.query.filter_by(id=item_id).update(data)      # other way?
     db.session.commit()
 
     return jsonify(ItemSchema().dump(item)), 200
 
 
-@app.route('/items/<int:idx>', methods=['DELETE'])
+@app.route('/items/<int:item_id>', methods=['DELETE'])
 @requires_auth
-def delete_item(idx, user_id):
+def delete_item(item_id, user_id):
     """Delete an item from database."""
     # check if the item exists
-    item = validate_item_id(idx)
+    item = validate_item_id(item_id)
 
     # check if the deleter is the item's owner
     validate_ownership(item, user_id)

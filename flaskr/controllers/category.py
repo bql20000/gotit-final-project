@@ -3,7 +3,6 @@ from werkzeug.exceptions import BadRequest
 
 from flaskr import app
 from flaskr.models.category import CategoryModel
-from flaskr.models.item import ItemModel
 from flaskr.schemas.item import ItemSchema
 from flaskr.schemas.page import PageSchema
 from flaskr.schemas.category import CategorySchema
@@ -17,10 +16,10 @@ def get_all_categories():
     return jsonify(CategorySchema(many=True).dump(all_cats)), 200
 
 
-@app.route('/categories/<int:idx>', methods=['GET'])
-def get_category_by_id(idx):
-    """Return the category with id = idx."""
-    category = validate_category_id(idx)
+@app.route('/categories/<int:category_id>', methods=['GET'])
+def get_category_by_id(category_id):
+    """Return the category with id = category_id."""
+    category = validate_category_id(category_id)
     return jsonify(CategorySchema().dump(category)), 200
 
 
@@ -39,18 +38,18 @@ def create_category(data):
     return jsonify(CategorySchema().dump(category)), 201
 
 
-@app.route('/categories/<int:idx>/items', methods=['GET'])
+@app.route('/categories/<int:category_id>/items', methods=['GET'])
 @load_request_data(PageSchema)
-def get_items_in_category(idx, data):
-    """ Return all items in 1 page of the category with id = idx.
+def get_items_in_category(category_id, data):
+    """ Return all items in 1 page of the category with id = category_id.
 
     The item page is specified by 2 fields in the post request:
         page_number (default=1): the wanted page
         items_per_page (default=2): the items in each page
     """
 
-    # check if category with id = idx exists
-    category = validate_category_id(idx)
+    # check if category with id = category_id exists
+    category = validate_category_id(category_id)
 
     # set params as default if not provided
     page_number = int(data.get('page_number', 1))

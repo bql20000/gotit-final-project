@@ -7,10 +7,10 @@ from flaskr.models.category import CategoryModel
 class FirstCharNotNum(Validator):
     error = 'First character must not be a number.'
 
-    def __call__(self, value):
-        if value and '9' >= value[0] >= '0':
+    def __call__(self, name):
+        if name and '9' >= name[0] >= '0':
             raise ValidationError(FirstCharNotNum.error)
-        return value
+        return name
 
 
 class CategoryExists(Validator):

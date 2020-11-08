@@ -32,17 +32,17 @@ def validate_ownership(item, user_id):
         raise Forbidden('You are not allowed to modify this item.')
 
 
-def validate_item_id(idx):
-    """Return the item object with id = {idx} or None if not exist."""
-    item = ItemModel.query.get(idx)
+def validate_item_id(item_id):
+    """Return the item object with id = {item_id} or None if not exist."""
+    item = ItemModel.query.get(item_id)
     if item is None:
-        raise NotFound(f'Item with id {idx} not found.')
+        raise NotFound(f'Item with id {item_id} not found.')
     return item
 
 
-def validate_category_id(idx):  #
-    """Return the category object with id = {idx} or None if not exist."""
-    category = CategoryModel.query.get(idx)
+def validate_category_id(category_id):  #
+    """Return the category object with id = {category_id} or None if not exist."""
+    category = CategoryModel.query.get(category_id)
     if category is None:
-        raise NotFound(f'Category with id {idx} not found.')
+        raise NotFound(f'Category with id {category_id} not found.')
     return category
