@@ -3,7 +3,7 @@ from functools import wraps
 
 import jwt
 from flask import request, current_app
-from werkzeug.exceptions import Unauthorized
+from werkzeug.exceptions import Unauthorized, BadRequest
 
 
 def encode_jwt(user_id):
@@ -28,7 +28,14 @@ def requires_auth(func):
         if not auth_header:
             raise Unauthorized('Please log in first.')
         try:
-            access_token = auth_header[7:]  # exclude "Bearer " from "Bearer {access_token}"
+            # exclude "Bearer " from "Bearer {access_token}"
+            try:
+                token_type = auth_header.split()[0]
+                access_token = auth_header.split()[1]
+            except IndexError:
+                raise BadRequest('Bad authorization header.')
+            if token_type != 'Bearer':
+                raise BadRequest(f'{token_type} token type not supported.')
             user_id = jwt.decode(access_token, current_app.config['SECRET_KEY'])['sub']
             return func(*args, user_id=user_id, **kwargs)
         except jwt.ExpiredSignatureError:
