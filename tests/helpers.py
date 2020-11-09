@@ -118,5 +118,6 @@ def request_page_demo(client, category_id, page_number, items_per_page):
 
 
 def get_token(client, username, password):
+    """Returns JWT access token after some user logs in."""
     return login_demo(client, {'username': username, 'password': password}
                       ).get_json()['access_token']
