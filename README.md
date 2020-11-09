@@ -29,45 +29,46 @@ All the required packages have been listed in <code>requirements.txt</code>. In 
 >
 Some of the main packages you might want to have a look at:
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/): Mircro web framework
-- [Flask-SQLALchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/): Object-raltional mapping
-- [pyJWT](https://pyjwt.readthedocs.io/en/latest/): Encode and decode the JSON Web Token. 
-- [marshmallow](https://marshmallow.readthedocs.io/en/stable/): Validate request data
-- [flask-hashing](https://flask-hashing.readthedocs.io/en/latest/): Hash user's password
-- [pytest](https://docs.pytest.org/en/stable/): Test the application 
+- [Flask-SQLALchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/): Object-raltional mapping (ORM)
+- [pyJWT](https://pyjwt.readthedocs.io/en/latest/): Encoding and decoding the JSON Web Token. 
+- [marshmallow](https://marshmallow.readthedocs.io/en/stable/): Validating request data
+- [flask-hashing](https://flask-hashing.readthedocs.io/en/latest/): Hashing user's password
+- [pytest](https://docs.pytest.org/en/stable/): Testing the application 
 
 #### 5. Setting up SQL server
-In Mac OS, turn on MySQL Server in **System Preferences**. Now we need to create 2 database **catalog** and **catalog_test** for *development* environment and *testing* environment respectively. This can be done by logging in to the MySQL server, then open a WorkBench Query Tab and execute the following statement:
+- In Mac OS, turn on MySQL Server in **System Preferences**. Now we need to create 2 database **catalog** and **catalog_test** for *development* environment and *testing* environment respectively. This can be done by logging in to the MySQL server, then open a WorkBench Query Tab and execute the following statement:
 > CREATE DATABASE catalog;
 >
 > CREATE DATABASE catalog_test;
 
-All the tables will be automatically generated when we first run the application, thus we don't have to do it manually. However, you will need to tell the application the URI of your SQL server. To do this, look for the <code>config.py</code> file, set the <code>SQLALCHEMY_DATABASE_URI</code> attribute of both development environment and testing enviroment equal to the password of your SQL server:
+- All the tables will be automatically generated when we first run the application, thus we don't have to do it manually. However, you will need to tell the application the URI of your SQL server. To do this, look for the <code>config.py</code> file, set the <code>SQLALCHEMY_DATABASE_URI</code> attribute of both development environment and testing enviroment equal to the password of your SQL server:
 > SQLALCHEMY_DATABASE_URI = 'mysql://root:<your_password>@localhost/catalog'
 >
 > SQLALCHEMY_DATABASE_URI = 'mysql://root:<your_password>@localhost/catalog_test'
 
-For example:
+- For example:
 > SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@localhost/catalog'
 >
 > SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@localhost/catalog_test'
 
 #### 6. Some configuration
-In <code>config.py</code> file, you can change the <code>SECRET_KEY</code> used for authorization system or the <code>HASHING_SALT</code> used to hash the password. 
+In <code>config</code> folder, you can change these following configuration: 
+- <code>SECRET_KEY</code>: secret key used for authorization system. 
+- <code>JWT_EXPIRATION_PERIOD</code>: the length of expiration period of JWT access token.
 
 ## Setting up a local host web server
-First we need to change the default environment (production) to development environment:
+- From the terminal, tell Flask where to find your application:
+> $ export FLASK_APP=main
+- Second we need to change the default environment (production) to development mode:
 > $ export FLASK_ENV=development
->
-Then, simply run the <code>run.py</code>:
-> $ python run.py
->
-The application is now available at local host: <code>http://127.0.0.1:5000</code>.
+- Then, simply run our flask application:
+> $ flask run
+- The application is now available at local host: <code>http://127.0.0.1:5000</code>.
 
 ## Testing
 - [Postman](https://www.postman.com): You can use postman to create custom requests to our local host.
 - [Pytest](https://docs.pytest.org/en/stable/): I wrote several tests in the <code>tests</code> folder. You can write some test by your own, there are functions in <code>helpers.py</code> may help you simplify the work. But first, let's switch to testing environment:
 > export FLASK_ENV=testing
->
-After that, run this command to obtain the testing results:
+
+- After that, run this command to obtain the testing results:
 > $ pytest --cov
->
