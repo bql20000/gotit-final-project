@@ -12,7 +12,7 @@ def handle_exception(e):
     """Handle all application's exceptions."""
     if isinstance(e, ValidationError):
         logging.exception(e)
-        return jsonify(message='Invalid request data.', error_info=e.messages), 400  #
+        return jsonify(message='Invalid request data.', error_info=e.messages), 400
 
     if isinstance(e, HTTPException):
         logging.exception(e)

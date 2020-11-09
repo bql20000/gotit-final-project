@@ -40,7 +40,7 @@ def validate_item_id(item_id):
     return item
 
 
-def validate_category_id(category_id):  #
+def validate_category_id(category_id):
     """Return the category object with id = {category_id} or None if not exist."""
     category = CategoryModel.query.get(category_id)
     if category is None:

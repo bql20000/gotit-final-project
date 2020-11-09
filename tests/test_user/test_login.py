@@ -37,5 +37,5 @@ def test_login_400(client, request_data, status_code, error):
 def test_login_200(client, request_data, status_code):
     resp = login_demo(client, request_data)
     assert resp.status_code == status_code
-    assert 'access_token' in resp.get_json()
-    assert 'token_type' in resp.get_json()
+    assert all(key in resp.get_json()
+               for key in ['access_token', 'token_type'])
