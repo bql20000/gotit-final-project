@@ -16,7 +16,7 @@ from tests.helpers import create_category_demo
         ({'name': '1occer'}, 400, {
             'message': 'Invalid request data.',
             'error_info': {
-                'name': 'First character must not be a number.'
+                'name': ['First character must not be a number.']
             }
         }),
 

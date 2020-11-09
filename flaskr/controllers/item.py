@@ -54,7 +54,9 @@ def update_item(item_id, data, user_id):
         raise BadRequest(f"This category has already had item {data['name']}.")
 
     # updated item & response back to client
-    ItemModel.query.filter_by(id=item_id).update(data)      # other way?
+    item.name = data['name']
+    item.description = data['description']
+    item.category_id = data['category_id']
     db.session.commit()
 
     return jsonify(ItemSchema().dump(item)), 200
