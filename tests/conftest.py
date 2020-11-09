@@ -10,7 +10,6 @@ def reset_db():
         db.drop_all()
         db.create_all()
         create_db_samples()
-        db.session.commit()
 
 
 @pytest.fixture
