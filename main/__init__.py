@@ -10,13 +10,10 @@ from main.extensions import db, hashing
 def create_app():
     """Create a flask application & config environment"""
     app = Flask(__name__)
-
-    if app.config['ENV'] == 'development':
-        app.config.from_object('config.development.DevelopmentConfig')
-    elif app.config['ENV'] == 'testing':
-        app.config.from_object('config.testing.TestingConfig')
-    else:
-        raise Exception('Unknown environment.')
+    try:
+        app.config.from_object(f'config.{app.config["ENV"]}.config')
+    except:
+        raise Exception(f'Unknown environment {app.config["ENV"]}.')
 
     return app
 
