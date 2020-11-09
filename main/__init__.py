@@ -1,4 +1,8 @@
-from flask import Flask
+import logging
+from werkzeug.exceptions import HTTPException
+
+from flask import Flask, jsonify
+from marshmallow import ValidationError
 
 from main.extensions import db, hashing
 from main.models.item import ItemModel
@@ -31,9 +35,28 @@ def create_app():
     return app
 
 
-app = create_app()
+def init_routes():
+    import main.controllers
 
-import main.controllers.user
-import main.controllers.category
-import main.controllers.item
-import main.controllers.exception
+
+app = create_app()
+init_routes()
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Handle all application's exceptions."""
+    if isinstance(e, ValidationError):
+        logging.exception(e)
+        return jsonify(message='Invalid request data.', error_info=e.messages), 400
+
+    if isinstance(e, HTTPException):
+        logging.exception(e)
+        return jsonify(message=e.description,
+                       error_info=e.response.data if e.response else {}
+                       ), e.code
+
+    logging.exception(e)
+    return jsonify(message='Internal server error.', error_info={}), 500
+
+

@@ -10,14 +10,14 @@ from main.helpers import validate_category_id, load_request_data
 
 
 @app.route('/categories', methods=['GET'])
-def get_all_categories():
+def get_categories():
     """Return all categories"""
     all_cats = CategoryModel.query.all()
     return jsonify(CategorySchema(many=True).dump(all_cats)), 200
 
 
 @app.route('/categories/<int:category_id>', methods=['GET'])
-def get_category_by_id(category_id):
+def get_category(category_id):
     """Return the category with id = category_id."""
     category = validate_category_id(category_id)
     return jsonify(CategorySchema().dump(category)), 200
@@ -40,7 +40,7 @@ def create_category(data):
 
 @app.route('/categories/<int:category_id>/items', methods=['GET'])
 @load_request_data(PageSchema)
-def get_items_in_category(category_id, data):
+def get_items(category_id, data):
     """ Return all items in 1 page of the category with id = category_id.
 
     The item page is specified by 2 fields in the post request:
