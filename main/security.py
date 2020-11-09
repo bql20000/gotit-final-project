@@ -30,9 +30,8 @@ def requires_auth(func):
         try:
             # exclude "Bearer " from "Bearer {access_token}"
             try:
-                token_type = auth_header.split()[0]
-                access_token = auth_header.split()[1]
-            except IndexError:
+                token_type, access_token = auth_header.split()
+            except ValueError:
                 raise BadRequest('Bad authorization header.')
             if token_type != 'Bearer':
                 raise BadRequest(f'{token_type} token type not supported.')

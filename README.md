@@ -57,12 +57,10 @@ In <code>config</code> folder, you can change these following configuration:
 - <code>JWT_EXPIRATION_PERIOD</code>: the length of expiration period of JWT access token.
 
 ## Setting up a local host web server
-- From the terminal, tell Flask where to find your application:
-> $ export FLASK_APP=main
-- Second we need to change the default environment (production) to development mode:
+- From the terminal, we need to change the default environment (production) to development mode:
 > $ export FLASK_ENV=development
-- Then, simply run our flask application:
-> $ flask run
+- Then, simply run:
+> $ python run.py
 - The application is now available at local host: <code>http://127.0.0.1:5000</code>.
 
 ## Testing
