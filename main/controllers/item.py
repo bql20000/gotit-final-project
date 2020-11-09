@@ -1,18 +1,18 @@
 from flask import jsonify
 from werkzeug.exceptions import BadRequest
 
-from main import app
+from main import app, helpers
 from main.security import requires_auth
 from main.schemas.item import ItemSchema
 from main.models.item import ItemModel
 from main.extensions import db
-from main.helpers import validate_item_id, load_request_data, validate_ownership
+from main.helpers import validate_ownership, load_request_data
 
 
 @app.route('/items/<int:item_id>', methods=['GET'])
 def get_item(item_id):
     """Response an item with id = item_id."""
-    item = validate_item_id(item_id)
+    item = helpers.get_item(item_id)
     return jsonify(ItemSchema().dump(item)), 200
 
 
@@ -26,7 +26,7 @@ def create_item(data, user_id):
     if ItemModel.query.filter_by(name=data['name'],
                                  category_id=data['category_id']
                                  ).first():
-        raise BadRequest(f"This category has already had item {data['name']}.")
+        raise BadRequest(f'This category has already had item {data["name"]}.')
 
     # save item to database and response
     item = ItemModel(**data, user_id=user_id)
@@ -41,7 +41,7 @@ def update_item(item_id, data, user_id):
     """Update an existing item & response the updated one."""
 
     # check if the item exists
-    item = validate_item_id(item_id)
+    item = helpers.get_item(item_id)
 
     # check if the updater is the item's owner
     validate_ownership(item, user_id)
@@ -51,7 +51,7 @@ def update_item(item_id, data, user_id):
                                              category_id=data['category_id']
                                              ).first()
     if existed_item and existed_item.id != item_id:
-        raise BadRequest(f"This category has already had item {data['name']}.")
+        raise BadRequest(f'This category has already had item {data["name"]}.')
 
     # updated item & response back to client
     item.name = data['name']
@@ -67,7 +67,7 @@ def update_item(item_id, data, user_id):
 def delete_item(item_id, user_id):
     """Delete an item from database."""
     # check if the item exists
-    item = validate_item_id(item_id)
+    item = helpers.get_item(item_id)
 
     # check if the deleter is the item's owner
     validate_ownership(item, user_id)

@@ -32,7 +32,7 @@ def validate_ownership(item, user_id):
         raise Forbidden('You are not allowed to modify this item.')
 
 
-def validate_item_id(item_id):
+def get_item(item_id):
     """Return the item object with id = {item_id} or None if not exist."""
     item = ItemModel.query.get(item_id)
     if item is None:
@@ -40,7 +40,7 @@ def validate_item_id(item_id):
     return item
 
 
-def validate_category_id(category_id):
+def get_category(category_id):
     """Return the category object with id = {category_id} or None if not exist."""
     category = CategoryModel.query.get(category_id)
     if category is None:

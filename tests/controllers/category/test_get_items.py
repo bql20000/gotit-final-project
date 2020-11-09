@@ -1,6 +1,6 @@
 import pytest
 
-from tests.helpers import request_page_demo, create_item_demo, get_token
+from tests.helpers import get_items_demo, create_item_demo, get_token
 
 
 @pytest.mark.parametrize(
@@ -15,8 +15,8 @@ from tests.helpers import request_page_demo, create_item_demo, get_token
           }}),
     ]
 )
-def test_pagination_400(client, category_id, page_number, items_per_page, status_code, error):
-    resp = request_page_demo(client, category_id, page_number, items_per_page)
+def test_get_items_400(client, category_id, page_number, items_per_page, status_code, error):
+    resp = get_items_demo(client, category_id, page_number, items_per_page)
     assert resp.status_code == status_code
     assert resp.get_json() == error
 
@@ -31,8 +31,8 @@ def test_pagination_400(client, category_id, page_number, items_per_page, status
           }),
     ]
 )
-def test_pagination_404(client, category_id, page_number, items_per_page, status_code, error):
-    resp = request_page_demo(client, category_id, page_number, items_per_page)
+def test_get_items_404(client, category_id, page_number, items_per_page, status_code, error):
+    resp = get_items_demo(client, category_id, page_number, items_per_page)
     assert resp.status_code == status_code
     assert resp.get_json() == error
 
@@ -50,7 +50,7 @@ def test_pagination_404(client, category_id, page_number, items_per_page, status
         (1, 3, 4, 200),
     ]
 )
-def test_pagination_200(client, category_id, page_number, items_per_page, status_code):
+def test_get_items_200(client, category_id, page_number, items_per_page, status_code):
     # Add more 8 items to category 1 to get 10 in total
     token = get_token(client, 'long', '1234')
     for i in range(8):
@@ -59,7 +59,7 @@ def test_pagination_200(client, category_id, page_number, items_per_page, status
                 'category_id': 1}
         create_item_demo(client, data, token=token)
 
-    resp = request_page_demo(client, category_id, page_number, items_per_page)
+    resp = get_items_demo(client, category_id, page_number, items_per_page)
 
     assert resp.status_code == status_code
     total_pages = 10 // items_per_page + (10 % items_per_page > 0)

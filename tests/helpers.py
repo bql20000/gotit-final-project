@@ -107,7 +107,7 @@ def delete_item_demo(client, item_id, token=None):
         return client.delete(f'/items/{item_id}')
 
 
-def request_page_demo(client, category_id, page_number, items_per_page):
+def get_items_demo(client, category_id, page_number, items_per_page):
     """Return a response object received by the client after making a
     HTTP GET request to retrieve a list of item.
     The item list is determined by page_number & items_per_page provided

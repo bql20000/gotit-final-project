@@ -1,12 +1,12 @@
 from flask import jsonify
 from werkzeug.exceptions import BadRequest
 
-from main import app
+from main import app, helpers
 from main.models.category import CategoryModel
 from main.schemas.item import ItemSchema
 from main.schemas.page import PageSchema
 from main.schemas.category import CategorySchema
-from main.helpers import validate_category_id, load_request_data
+from main.helpers import load_request_data
 
 
 @app.route('/categories', methods=['GET'])
@@ -19,7 +19,7 @@ def get_categories():
 @app.route('/categories/<int:category_id>', methods=['GET'])
 def get_category(category_id):
     """Return the category with id = category_id."""
-    category = validate_category_id(category_id)
+    category = helpers.get_category(category_id)
     return jsonify(CategorySchema().dump(category)), 200
 
 
@@ -49,7 +49,7 @@ def get_items(category_id, data):
     """
 
     # check if category with id = category_id exists
-    category = validate_category_id(category_id)
+    category = helpers.get_category(category_id)
 
     # set params as default if not provided
     page_number = int(data.get('page_number', 1))
