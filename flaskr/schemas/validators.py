@@ -14,7 +14,7 @@ class FirstCharNotNum(Validator):
 
 
 class CategoryExists(Validator):
-    error = 'Category with id {category_id} not found.'
+    error = 'Category with id {} not found.'
 
     def __call__(self, category_id):
         if CategoryModel.query.get(category_id) is None:
