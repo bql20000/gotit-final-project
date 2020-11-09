@@ -3,8 +3,8 @@ from functools import wraps
 from flask import request
 from werkzeug.exceptions import NotFound, Forbidden
 
-from flaskr.models.category import CategoryModel
-from flaskr.models.item import ItemModel
+from main.models.category import CategoryModel
+from main.models.item import ItemModel
 
 
 def load_request_data(schema):

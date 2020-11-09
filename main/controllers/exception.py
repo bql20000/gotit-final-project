@@ -4,7 +4,7 @@ from flask import jsonify
 from marshmallow import ValidationError
 from werkzeug.exceptions import HTTPException
 
-from flaskr import app
+from main import app
 
 
 @app.errorhandler(Exception)

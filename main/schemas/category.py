@@ -1,7 +1,7 @@
 from marshmallow import fields, Schema
 from marshmallow.validate import Length
 
-from flaskr.schemas.validators import FirstCharNotNum
+from main.schemas.validators import FirstCharNotNum
 
 
 class CategorySchema(Schema):

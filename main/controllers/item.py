@@ -1,12 +1,12 @@
 from flask import jsonify
 from werkzeug.exceptions import BadRequest
 
-from flaskr import app
-from flaskr.security import requires_auth
-from flaskr.schemas.item import ItemSchema
-from flaskr.models.item import ItemModel
-from flaskr.extensions import db
-from flaskr.helpers import validate_item_id, load_request_data, validate_ownership
+from main import app
+from main.security import requires_auth
+from main.schemas.item import ItemSchema
+from main.models.item import ItemModel
+from main.extensions import db
+from main.helpers import validate_item_id, load_request_data, validate_ownership
 
 
 @app.route('/items/<int:item_id>', methods=['GET'])

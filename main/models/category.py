@@ -1,5 +1,5 @@
-from flaskr.extensions import db
-from flaskr.models.timestamp_mixin import TimestampMixin
+from main.extensions import db
+from main.models.timestamp_mixin import TimestampMixin
 
 
 class CategoryModel(db.Model, TimestampMixin):

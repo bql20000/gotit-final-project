@@ -1,9 +1,9 @@
 from flask import Flask
 
-from flaskr.extensions import db, hashing
-from flaskr.models.item import ItemModel
-from flaskr.models.user import UserModel
-from flaskr.models.category import CategoryModel
+from main.extensions import db, hashing
+from main.models.item import ItemModel
+from main.models.user import UserModel
+from main.models.category import CategoryModel
 
 
 def register_extensions(app):
@@ -33,7 +33,7 @@ def create_app():
 
 app = create_app()
 
-import flaskr.controllers.user
-import flaskr.controllers.category
-import flaskr.controllers.item
-import flaskr.controllers.exception
+import main.controllers.user
+import main.controllers.category
+import main.controllers.item
+import main.controllers.exception

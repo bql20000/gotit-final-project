@@ -1,5 +1,5 @@
-from flaskr.extensions import db, hashing
-from flaskr.models.timestamp_mixin import TimestampMixin
+from main.extensions import db, hashing
+from main.models.timestamp_mixin import TimestampMixin
 
 
 class UserModel(db.Model, TimestampMixin):

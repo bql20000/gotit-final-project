@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 from marshmallow.validate import Length, Regexp
 
-from flaskr.schemas.validators import FirstCharNotNum
+from main.schemas.validators import FirstCharNotNum
 
 
 class UserSchema(Schema):

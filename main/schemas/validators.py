@@ -1,7 +1,7 @@
 from marshmallow.validate import Validator
 from marshmallow import ValidationError
 
-from flaskr.models.category import CategoryModel
+from main.models.category import CategoryModel
 
 
 class FirstCharNotNum(Validator):

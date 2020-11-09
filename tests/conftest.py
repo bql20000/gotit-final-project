@@ -1,7 +1,7 @@
 import pytest
 
-from flaskr.extensions import db
-from flaskr import app
+from main.extensions import db
+from main import app
 from tests.helpers import create_db_samples
 
 
