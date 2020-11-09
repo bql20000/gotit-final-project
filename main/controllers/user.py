@@ -1,5 +1,5 @@
 from flask import jsonify
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, Unauthorized
 
 from main import app
 from main.models.user import UserModel
@@ -38,7 +38,7 @@ def login(data):
     ).first()
 
     if user is None:
-        raise BadRequest('Wrong username or password.')
+        raise Unauthorized('Wrong username or password.')
 
     # generate jwt & response to client
     return jsonify(access_token=encode_jwt(user.id), token_type='Bearer'), 200

@@ -6,22 +6,22 @@ from tests.helpers import login_demo
 @pytest.mark.parametrize(
     'request_data, status_code, error',
     [
-        # 400 - wrong username
+        # 401 - wrong username
         ({'username': 'longg', 'password': '1234'},
-         400,
+         401,
          {'message': 'Wrong username or password.',
           'error_info': {}
           }),
 
-        # 400 - wrong password
+        # 401 - wrong password
         ({'username': 'long', 'password': '12334'},
-         400,
+         401,
          {'message': 'Wrong username or password.',
           'error_info': {}
           }),
     ]
 )
-def test_login_400(client, request_data, status_code, error):
+def test_login_401(client, request_data, status_code, error):
     resp = login_demo(client, request_data)
     assert resp.status_code == status_code
     assert resp.get_json() == error

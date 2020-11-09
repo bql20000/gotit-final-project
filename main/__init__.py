@@ -5,18 +5,6 @@ from flask import Flask, jsonify
 from marshmallow import ValidationError
 
 from main.extensions import db, hashing
-from main.models.item import ItemModel
-from main.models.user import UserModel
-from main.models.category import CategoryModel
-
-
-def register_extensions(app):
-    """Register the application with needed extensions."""
-    hashing.init_app(app)
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
-        db.session.commit()
 
 
 def create_app():
@@ -30,17 +18,26 @@ def create_app():
     else:
         raise Exception('Unknown environment.')
 
-    register_extensions(app)
-
     return app
 
 
-def init_routes():
+def register_controllers_and_models():
     import main.controllers
+    import main.models
+
+
+def register_extensions():
+    """Register the application with needed extensions."""
+    hashing.init_app(app)
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
+        db.session.commit()
 
 
 app = create_app()
-init_routes()
+register_controllers_and_models()
+register_extensions()
 
 
 @app.errorhandler(Exception)
@@ -58,5 +55,3 @@ def handle_exception(e):
 
     logging.exception(e)
     return jsonify(message='Internal server error.', error_info={}), 500
-
-
